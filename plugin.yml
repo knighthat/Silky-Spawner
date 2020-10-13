@@ -1,0 +1,11 @@
+name: SilkySpawner
+author: TnKnight
+version: 0.0.1
+api-version: 1.13
+main: me.TnKnight.SilkySpawner.SilkySpawner
+
+commands:
+  SilkySpawner:
+    aliases:
+      - ss   
+      - spawner

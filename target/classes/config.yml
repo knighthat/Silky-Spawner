@@ -1,0 +1,96 @@
+###################################################
+#                                                 #
+#                  !! WARNING !!                  #
+#                                                 #
+#Please, DO NOT change anything in version section#
+#                                                 #
+###################################################
+version: 0.0.1
+
+Prefix: "&e[&bSilky&1Spawner&e] "
+ReloadMessage: "&aconfig.yml has been reloaded!"
+NoPerm: "&cYou don't have permission %perm% to execute this command!"
+NotPlayer: "&7Only player can issue this command!"
+InvalidCommand: "&4You entered an invalid command! Try '/silkyspawner help' for help."
+MistypedCommand: "&cUsage: &f%command%"
+Error: "&4&lErrorCode: &c%error%"
+ErrorMessage: "&bPlease report this &4&lErrorCode &bto admin ASAP!"
+PlaceSpawner: "&2You just placed a spawner named %name%"
+NotHoldingSpawner: "&9You must hold your spawner in main han in order to modify %type%!"
+NotANumber: "&f%input%&7 is not a number!"
+OutOfLines: "&7There is no line number %input%!"
+NoName: "&bYour spawner has no name! Please give it a name."
+
+
+#If true, only PICKAXE with enchantment (custom enchantment with CustomEnchantment is true and SilkTouch with false)
+#will be able to break and get the spawner. If false, breaker receives nothing with non-enchanted pickaxe
+RequireEnchantment: false
+BreakMessage: "&cYou can't break this spawner!"
+
+
+#If true, GameMode listed below will be required if a player want to pick the spawner up. Others gamemode will be received nothing.
+Require: true 
+GameMode: SURVIVAL
+GameModeMessage: "&8Only players in survival mode can break this spawner."
+
+#Name and Lore of the spawner appeared when placing the spawner down. Distance is how far from the Name to the top face of the spawner.
+#Spacing stands for is the gap between each line (From 0.1 -> 1 with 1 is a full block height)
+NameAndLore:
+  Distance: 2.0
+  Spacing: 0.3
+
+
+#Number of characters that can be added to name or lore of the spawner
+#Should the plugin counts the color codes as character. For example, &a&lKnightHat has 13 characters if true, and 9 if false
+#!!!blank-spaces(" ") will not be counted.
+CountTheCodes: true
+MinimumChars: 3
+MaximumChars: 15
+# %type% could be either Name or Lore.
+InputTooShort: "&bYour %type% is too short. At least 3 characters required"
+InputTooLong: "&bYour %type% is too long. Can only be under 15 characters required"
+Name: Name
+Lore: Lore
+
+
+CustomEnchantment: true
+CETurnedOff: "&cYou have to enable CustomEnchantment to use this command!"
+#If CustomEnchantment is false, then you no need to change anything down here
+NotHoldingPickaxe: "&9You must hold your pickaxe in your main hand in order to add the enchantment."
+AlreadyAdded: "&cYour pickaxe already had this enchantment."
+EnchantAdded: "&2Enchantment added to your pickaxe successfully!"
+
+
+#For more color codes. Visit this website: https://www.colorschemer.com/minecraft-color-codes/
+HelpCommand:
+  Header: "&9List of all &b&lCLICKABLE &1commands"
+  HoverText: Click here to get the command!
+  TextColor: YELLOW
+  HoverColor: GRAY
+  
+  
+CommandsAssistant:
+  help:
+    Usage: "/silkyspawner help"
+    Description: "List all the available commands."
+    Permission: 
+  reload:
+    Usage: "/silkyspawner reload"
+    Description: "Reload this plugin."
+    Permission: silkyspawner.admin
+  enchant:
+    Usage: "/silkyspawner enchant"
+    Description: "Add custom enchantment to your holding pickaxe"
+    Permission: silkyspawner.command.addenchantment
+  setname:
+    Usage: "/silkyspawner setname <name>"
+    Description: "Name your spawner"
+    Permission: silkyspawner.command.setname
+  lore:
+    Usage: "/silkyspawner lore"
+    Description: "Get help for lore command"
+    Permission: silkyspawner.command.lore
+  remove:
+    Usage: "/silkyspawner remove <radius>"
+    Description: "Remove all the ArmorStands around player."
+    Permission: silkyspawner.command.remove
