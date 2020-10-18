@@ -1,0 +1,44 @@
+#########################################
+#                                       #
+#            GENERAL MESSAGE            #
+#                                       #
+#########################################
+
+ReloadMessage: "&aconfig.yml, message.yml, guisconfig.yml have been reloaded!"
+NoPerm: "&cYou don't have permission %perm% to execute this command!"
+MistypedCommand: "&cUsage: &f%command%"
+Error: "&4&lErrorCode: &e%error%"
+ErrorMessage: "&bPlease report this &4&lErrorCode &bto admin ASAP!"
+PlaceSpawner: "&2You just placed a spawner named %name%"
+NotHoldingSpawner: "&9You must hold your spawner in main han in order to modify %type%!"
+NotANumber: "&f%input%&7 is not a number!"
+OutOfLines: "&7There is no line number %input%!"
+NoName: "&bYour spawner has no name! Please give it a name."    
+
+
+
+##########################################
+#                                        #
+#       CUSTOM ENCHANTMENT MESSAGE       #
+#                                        #
+##########################################
+
+CETurnedOff: "&cYou have to enable CustomEnchantment to use this command!"
+NotHoldingPickaxe: "&9You must hold your pickaxe in your main hand in order to add the enchantment."
+AlreadyAdded: "&cYour pickaxe already had this enchantment."
+Success: "&2Enchantment added to your pickaxe successfully!"
+
+
+
+#########################################
+#                                       #
+#              GUI MESSAGE              #
+#                                       #
+#########################################
+
+CloseMenu: "&cMenu Closed!"
+GetSpawner: "&dEnjoy your spawner!"
+OnFirstPage: "&cYou are on the very first page!"
+OnLastPage: "&cNo more pages for you to go through :("
+RequestCancel: "&eTips: Type %cancel_cmd% to cancel the modification."
+Cancelled: "&cYou cancelled it!"

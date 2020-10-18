@@ -1,0 +1,108 @@
+#########################################
+#                                       #
+#               MAIN MENU               #
+#                                       #
+# Please, DO NOT change anything before #
+#       ":" or you will get errors      #
+#                                       #
+#########################################
+
+MainMenu:
+  Title: "&c&lMain &d&lMenu"
+  CreateSpawnerItem:
+    Name: "&aCreate Spawner"
+    Lore:
+      - ""
+      - "&8Get your own spawner"
+      - ""
+  SetNameItem: 
+    Name: "&bSet Name"
+    Lore:
+      - ""
+      - "&8Name your spawner"
+      - ""
+  LoreItem:
+    Name: "&eLore"
+    Lore:
+      - ""
+      - "&8Something to do with lore"
+      - ""
+  EnchantPickaxeItem: 
+    Name: "&dEnchanting"
+    Lore:
+      - ""
+      - "&8Use it on your pickaxe"
+      - ""
+  RemoveItem:
+    Name: "&4Remove ArmorStands"
+    Lore:
+      - ""
+      - "&8Remove all the AmorStands"
+      - "&8within the given radius!"
+      - ""
+  ReloadItem:
+    Name: "&aReload plugin"
+    Lore:
+      - ""
+      - "&8Reload plugin!"
+      - ""
+  HelpItem:
+    Name: "&6Help List"
+    Lore:
+      - ""
+      - "&8List all the available commands"
+      - ""
+  Close: "&c&lClose Menu"
+    
+ 
+#########################################
+#                                       #
+#          CREATE SPAWNER MENU          #
+#                                       #
+# Please, DO NOT change anything before #
+#       ":" or you will get errors      #
+#                                       #
+#########################################
+  
+CreateSpawnerMenu:
+  Title: "&a&lCreate &b&lCustom &e&lSpawner &f- &8Page %page%"
+  Fill: BLUE_STAINED_GLASS_PANE
+  PreviousPage: "Previous Page"
+  NextPage: "Next Page"
+  GoBackButton:  "&eGo back"
+  
+
+#########################################
+#                                       #
+#        LORE MODIFICATIOR MENU         #
+#                                       #
+# Please, DO NOT change anything before #
+#       ":" or you will get errors      #
+#                                       #
+#########################################
+
+LoreModificatiorMenu:
+  Title: "Lore Modificatior"
+  AddLoreButton: "&aAdd lore"
+  SetLoreButton: "&bSet lore"
+  InsertLoreButton: "&9Insert lore"
+  RemoveLoreButton: "&cRemove lore"
+  GoBackButton: "&eGo back"
+
+    
+    
+#########################################
+#                                       #
+#             CONFIRM MENU              #
+#                                       #
+# Please, DO NOT change anything before #
+#       ":" or you will get errors      #
+#                                       #
+#########################################
+
+ConfirmMenu:
+  Title: "&a&lConfirm Menu"
+  Fill: AIR
+  YesButton: "&aYes"
+  NoButton: "&cNo"
+  

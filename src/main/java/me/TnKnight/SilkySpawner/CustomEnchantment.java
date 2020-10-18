@@ -12,15 +12,15 @@ import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.inventory.ItemStack;
 
 public class CustomEnchantment {
-	public static final Enchantment PICKDASPAWNER = new BaseCustomEnchant(NamespacedKey.minecraft("spawner_picker"));
-	private static BaseCustomEnchant ench = new BaseCustomEnchant(NamespacedKey.minecraft("spawner_picker"));
+	public static final Enchantment PICKDASPAWNER = new BaseCustomEnchant("spawner_picker");
+	private static BaseCustomEnchant ench = new BaseCustomEnchant("spawner_picker");
 
 	public static void Register() {
 		boolean registered = Arrays.stream(Enchantment.values()).collect(Collectors.toList()).contains(PICKDASPAWNER);
 		if (!registered)
 			registerEnchantment(PICKDASPAWNER);
 		SilkySpawner.instance.getServer().getConsoleSender()
-				.sendMessage(Utils.AddColors("&aCustom Enchanment successfully registered!"));
+				.sendMessage(Utils.AddColors(Utils.Prefix + "&aCustom Enchanment successfully registered!"));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -48,8 +48,8 @@ public class CustomEnchantment {
 
 class BaseCustomEnchant extends Enchantment {
 
-	public BaseCustomEnchant(NamespacedKey NameSpacedKey) {
-		super(NameSpacedKey);
+	public BaseCustomEnchant(String key) {
+		super(NamespacedKey.minecraft(key));
 	}
 
 	@Override

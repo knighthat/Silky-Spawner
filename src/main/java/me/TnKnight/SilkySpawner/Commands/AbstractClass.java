@@ -2,8 +2,8 @@ package me.TnKnight.SilkySpawner.Commands;
 
 import org.bukkit.entity.Player;
 
-import me.TnKnight.SilkySpawner.Config;
 import me.TnKnight.SilkySpawner.SilkySpawner;
+import me.TnKnight.SilkySpawner.Files.Config;
 
 public abstract class AbstractClass {
 

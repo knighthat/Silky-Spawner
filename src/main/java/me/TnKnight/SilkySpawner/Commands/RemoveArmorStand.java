@@ -1,14 +1,10 @@
 package me.TnKnight.SilkySpawner.Commands;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import me.TnKnight.SilkySpawner.Config;
 import me.TnKnight.SilkySpawner.Utils;
+import me.TnKnight.SilkySpawner.Files.Config;
 
 public class RemoveArmorStand extends AbstractClass {
 
@@ -30,22 +26,18 @@ public class RemoveArmorStand extends AbstractClass {
 	@Override
 	public void executeCommand(Player player, String[] args) {
 		if (args.length == 0 || args.length > 1) {
-			player.spigot().sendMessage(Utils.hoverNclick("/silkyspawner remove <radius>", TextColor, HoverText,
-					HoverColor, "/silkyspawner remove "));
+			player.spigot().sendMessage(
+					Utils.hoverNclick("/silkyspawner remove <radius>", TextColor, HoverText, HoverColor, getUsage()));
 			return;
 		}
-		if (!args[0].matches("-?\\d+")) {
-			player.sendMessage(Utils.getConfig("NotANumber").replace("%input%", args[1]));
-			return;
+		try {
+			final int radius = Integer.parseInt(args[0]);
+			if (radius > 0)
+				player.getWorld().getNearbyEntities(player.getLocation(), radius, radius, radius).stream()
+						.filter(E -> E.getType().equals(EntityType.ARMOR_STAND)).filter(E -> E.getCustomName() != null)
+						.forEach(E -> E.remove());
+		} catch (NumberFormatException e) {
+			player.sendMessage(Utils.getMessage("NotANumber").replace("%input%", args[0]));
 		}
-		int radius = Integer.parseInt(args[0]);
-		if (radius < 0)
-			return;
-		List<Entity> Entities = player.getWorld().getNearbyEntities(player.getLocation(), radius, radius, radius)
-				.stream().filter(en -> en.getType().equals(EntityType.ARMOR_STAND))
-				.filter(en -> en.getCustomName() != null).collect(Collectors.toList());
-		for (int i = 0; i < Entities.size(); i++)
-			Entities.get(i).remove();
 	}
-
 }

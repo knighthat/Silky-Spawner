@@ -1,4 +1,4 @@
-package me.TnKnight.SilkySpawner;
+package me.TnKnight.SilkySpawner.Files;
 
 import java.io.File;
 import java.io.InputStreamReader;
@@ -7,6 +7,9 @@ import java.io.UnsupportedEncodingException;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+
+import me.TnKnight.SilkySpawner.SilkySpawner;
+import me.TnKnight.SilkySpawner.Utils;
 
 public class Config {
 
@@ -19,7 +22,7 @@ public class Config {
 			file = new File(Main.getDataFolder(), "config.yml");
 		if (!file.exists())
 			Main.saveResource("config.yml", false);
-		configChecking();
+		versionChecking();
 	}
 
 	public static void reload() {
@@ -34,8 +37,8 @@ public class Config {
 		} catch (UnsupportedEncodingException e) {
 		}
 		if (data != null) {
-			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(data);
-			config.setDefaults(defConfig);
+			YamlConfiguration configData = YamlConfiguration.loadConfiguration(data);
+			config.setDefaults(configData);
 		}
 	}
 
@@ -45,10 +48,13 @@ public class Config {
 		return config;
 	}
 
-	public static void configChecking() {
-		if (!getConfig().getString("version").equals(Main.getDescription().getVersion())) {
-			file.renameTo(new File(Main.getDataFolder(), "config.yml.old"));
-			file.delete();
-		}
+	private static void versionChecking() {
+		if (Config.getConfig().getString("version").equals(Main.getDescription().getVersion()))
+			return;
+		file.renameTo(new File(Main.getDataFolder(), "config.yml.old"));
+		file.delete();
+		Main.saveResource("config.yml", false);
+		Main.getServer().getConsoleSender().sendMessage(Utils.AddColors(Utils.Prefix
+				+ "&4Changing version detected! For safe, you should move or rename message.yml and guisconfig.yml and let plugin create a new one."));
 	}
 }

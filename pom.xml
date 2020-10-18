@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>me.TnKnight.SilkySpawner</groupId>
   <artifactId>SilkySpawner</artifactId>
-  <version>0.0.1</version>
+  <version>0.1.0-BETA</version>
   <build>
       <plugins>
            <plugin>

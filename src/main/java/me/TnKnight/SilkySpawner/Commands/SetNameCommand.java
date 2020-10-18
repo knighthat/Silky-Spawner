@@ -5,10 +5,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.TnKnight.SilkySpawner.Config;
 import me.TnKnight.SilkySpawner.Utils;
+import me.TnKnight.SilkySpawner.Files.Config;
 
-public class SetName extends AbstractClass {
+public class SetNameCommand extends AbstractClass {
 
 	@Override
 	public String getName() {
@@ -30,11 +30,11 @@ public class SetName extends AbstractClass {
 		String name = Utils.arrayToString(args, 0);
 		ItemStack spawner = player.getInventory().getItemInMainHand();
 		if (!spawner.getType().equals(Material.SPAWNER)) {
-			player.sendMessage(Utils.getConfig("NotHoldingSpawner").replace("%type%", "Name"));
+			player.sendMessage(Utils.getMessage("NotHoldingSpawner").replace("%type%", "Name"));
 			return;
 		}
 		if (name.isEmpty()) {
-			player.sendMessage(Utils.getConfig("MistypedCommand").replace("%command%", getUsage()));
+			player.sendMessage(Utils.getMessage("MistypedCommand").replace("%command%", getUsage()));
 			return;
 		}
 		if (!Utils.charsCounting(player,
