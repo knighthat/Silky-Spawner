@@ -5,16 +5,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.bukkit.Material;
+import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.TnKnight.SilkySpawner.Utils;
-import me.TnKnight.SilkySpawner.Files.Config;
-import net.md_5.bungee.api.chat.TextComponent;
+import me.TnKnight.SilkySpawner.Files.MessageYAML;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 
-public class LoreCommand extends AbstractClass {
+public class LoreCommand extends CommandsAbstractClass {
+
+	public static final List<String> command = new ArrayList<>(Arrays.asList("add", "set", "insert", "remove"));
 
 	@Override
 	public String getName() {
@@ -23,106 +27,86 @@ public class LoreCommand extends AbstractClass {
 
 	@Override
 	public String getDescription() {
-		return Config.getConfig().getString("CommandsAssistant." + getName() + ".Description");
+		return super.getDes(getName());
 	}
 
 	@Override
 	public String getUsage() {
-		return Config.getConfig().getString("CommandsAssistant." + getName() + ".Usage");
+		return super.getUsg(getName());
 	}
-
-	public static List<String> command = new ArrayList<String>(Arrays.asList("add", "set", "insert", "remove"));
 
 	@Override
 	public void executeCommand(Player player, String[] args) {
 		if (args.length == 0 || !command.contains(args[0].toLowerCase())) {
-			for (String i : command)
-				player.spigot().sendMessage(subCommand(i));
+			for (String string : command)
+				this.sendMes(player, string);
 			return;
 		}
-		if (!player.getInventory().getItemInMainHand().getType().equals(Material.SPAWNER)) {
-			player.sendMessage(
-					Utils.getMessage("NotHoldingSpawner").replace("%type%", Config.getConfig().getString("Lore")));
+		if ((args.length == 1 && args[0].equalsIgnoreCase("add"))
+		    || (args.length == 2 && (!args[0].equalsIgnoreCase("add") && !args[0].equalsIgnoreCase("remove")))) {
+			this.sendMes(player, args[0]);
 			return;
+		}
+		String input = Utils.AddColors(Utils.arrayToString(args, args[0].equalsIgnoreCase("add") ? 1 : 2));
+		if (!args[0].equalsIgnoreCase("remove")) {
+			if (!super.mConfirm(player, "SPAWNER", "Lore"))
+				return;
+			if (input == null || input.isEmpty()) {
+				this.sendMes(player, args[0].toLowerCase());
+				return;
+			}
+			if (!Utils.charsCounting(player, input, "Lore"))
+				return;
 		}
 		ItemStack spawner = player.getInventory().getItemInMainHand();
 		ItemMeta sMeta = spawner.getItemMeta();
-		List<String> sLore = new ArrayList<String>();
-		String creature = null;
-		if (sMeta.hasLore()) {
-			sLore.addAll(sMeta.getLore());
-			creature = sLore.get(sLore.size() - 1);
-			sLore.remove(sLore.size() - 1);
-		}
-		if (args[0].equalsIgnoreCase("add")) {
-			String lore = Utils.arrayToString(args, 1);
-			if (lore.isEmpty()) {
-				player.spigot().sendMessage(subCommand(args[0]));
-				return;
-			}
-			if (!Utils.charsCounting(player,
-					(Config.getConfig().getBoolean("CountTheCodes") ? lore : Utils.StripColors(lore)), "Lore"))
-				return;
-			sLore.add(Utils.AddColors(lore));
-			if (creature != null)
-				sLore.add(Utils.AddColors(creature));
-			sMeta.setLore(sLore);
-			spawner.setItemMeta(sMeta);
-		} else {
-			String lore = Utils.arrayToString(args, 2);
-			if (args.length == 1 || (!args[0].equalsIgnoreCase("remove") && lore.isEmpty())) {
-				player.spigot().sendMessage(subCommand(args[0]));
-				return;
-			}
+		List<String> sLore = sMeta.getLore().stream().filter(line -> !line.equals(sMeta.getLore().get(sMeta.getLore().size() - 1)))
+		    .collect(Collectors.toList());
+		int line = 0;
+		if (!args[0].equalsIgnoreCase("add"))
 			try {
-				int line = Integer.parseInt(args[1]) - 1;
-				if (line < 0 || line > sLore.size() - 1) {
-					player.sendMessage(Utils.getMessage("OutOfLines").replace("%input%", args[1]));
+				line = Integer.parseInt(args[1]);
+				line -= 1;
+				if (line < 0 || line >= sLore.size()) {
+					player.sendMessage(super.getMsg("OutOfLines").replace("%input%", args[1]));
 					return;
 				}
-				List<String> newLore = new ArrayList<String>();
-				for (int i = 0; i < sLore.size(); i++)
-					if (i == line) {
-						switch (args[0].toLowerCase()) {
-						case "set":
-							newLore.add(lore);
-							break;
-						case "insert":
-							newLore.add(sLore.get(i));
-							newLore.add(lore);
-							break;
-						case "remove":
-							break;
-						}
-					} else
-						newLore.add(sLore.get(i));
-				newLore.add(Utils.AddColors(creature));
-				sMeta.setLore(newLore.stream().map(string -> Utils.AddColors(string)).collect(Collectors.toList()));
-				spawner.setItemMeta(sMeta);
 			} catch (NumberFormatException e) {
-				player.sendMessage(Utils.getMessage("NotANumber").replace("%input%", args[1]));
+				player.sendMessage(super.getMsg("NotANumber").replace("%input%", args[1]));
 			}
+		switch (args[0].toLowerCase()) {
+			case "add" :
+				sLore.add(input);
+				break;
+			case "set" :
+				sLore.set(line, input);
+				break;
+			case "insert" :
+				List<String> nLore = new ArrayList<>();
+				for (int i = 0; i < sLore.size(); i++) {
+					nLore.add(sLore.get(i));
+					if (sLore.get(line).equals(sLore.get(i)))
+						nLore.add(input);
+				}
+				sLore.clear();
+				sLore = nLore;
+				break;
+			case "remove" :
+				sLore.remove(line);
+				break;
 		}
-		if (!sMeta.hasDisplayName())
-			player.sendMessage(Utils.getMessage("NoName"));
-		return;
+		sLore.add(Utils.AddColors(super.ValidateCfg("TypeOfCreature", true).replace("%creature_type%",
+		    ((CreatureSpawner) ((BlockStateMeta) spawner.getItemMeta()).getBlockState()).getSpawnedType().name())));
+		sMeta.setLore(sLore);
+		spawner.setItemMeta(sMeta);
 	}
 
-	private TextComponent subCommand(String SubString) {
-		switch (SubString.toLowerCase()) {
-		case "add":
-			return Utils.hoverNclick("/silkyspawner lore add <lore>", TextColor, HoverText, HoverColor,
-					"/silkyspawner lore add ");
-		case "set":
-			return Utils.hoverNclick("/silkyspawner lore set [line] <lore>", TextColor, HoverText, HoverColor,
-					"/silkyspawner lore set ");
-		case "insert":
-			return Utils.hoverNclick("/silkyspawner lore insert [line] <lore>", TextColor, HoverText, HoverColor,
-					"/silkyspawner lore insert ");
-		case "remove":
-			return Utils.hoverNclick("/silkyspawner lore remove [line]", TextColor, HoverText, HoverColor,
-					"/silkyspawner lore remove ");
-		}
-		return null;
+	private void sendMes(Player player, String sCmd) {
+		ComponentBuilder usage = new ComponentBuilder(
+		    ChatColor.translateAlternateColorCodes('&', MessageYAML.getConfig().getString("MistypedCommand")));
+		String cmd = "/silkyspawner lore " + sCmd
+		    + (!sCmd.equalsIgnoreCase("add") ? sCmd.equalsIgnoreCase("remove") ? " [line]" : " [line] <lore>" : " <lore>");
+		usage.append(Utils.hoverNclick(cmd, "/silkyspawner lore " + sCmd));
+		player.spigot().sendMessage(usage.create());
 	}
 }

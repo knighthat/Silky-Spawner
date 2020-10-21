@@ -1,4 +1,4 @@
-package me.TnKnight.SilkySpawner.MenusStorage;
+package me.TnKnight.SilkySpawner.Menus;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,12 +9,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import me.TnKnight.SilkySpawner.Storage;
 import me.TnKnight.SilkySpawner.Utils;
 import me.TnKnight.SilkySpawner.Files.Config;
 
 public class ConfirmMenu extends MenuAbstractClass {
 
-	public ConfirmMenu(Storage storage) {
+	public ConfirmMenu(MenusStorage storage) {
 		super(storage);
 	}
 
@@ -33,8 +34,12 @@ public class ConfirmMenu extends MenuAbstractClass {
 		Player player = (Player) e.getWhoClicked();
 		switch (e.getCurrentItem().getType()) {
 			case GREEN_WOOL :
-				player.getInventory().addItem(spawner(storage.getSpawner()));
-				player.sendMessage(Utils.getMessage("GetSpawner"));
+				ItemStack spawner = spawner(storage.getSpawner());
+				ItemMeta sMeta = spawner.getItemMeta();
+				sMeta.setDisplayName(null);
+				spawner.setItemMeta(sMeta);
+				player.getInventory().addItem(spawner);
+				player.sendMessage(Storage.getMsg("GetSpawner"));
 				player.closeInventory();
 				break;
 			case RED_WOOL :
@@ -49,16 +54,10 @@ public class ConfirmMenu extends MenuAbstractClass {
 	public void setMenuItems() {
 		for (int slot = 0; slot < getRows() * 9; slot++)
 			inventory.setItem(slot, new ItemStack(Material.getMaterial(invContains("ConfirmMenu.Fill") ? invConfig("ConfirmMenu.Fill") : "AIR")));
-		ItemStack yes = new ItemStack(Material.GREEN_WOOL);
-		ItemMeta yesMeta = yes.getItemMeta();
-		yesMeta.setDisplayName(Utils.AddColors(invContains("ConfirmMenu.YesButton") ? invConfig("ConfirmMenu.YesButton") : empty));
-		yes.setItemMeta(yesMeta);
-		inventory.setItem(16, yes);
-		ItemStack no = new ItemStack(Material.RED_WOOL);
-		ItemMeta noMeta = no.getItemMeta();
-		noMeta.setDisplayName(Utils.AddColors(invContains("ConfirmMenu.NoButton") ? invConfig("ConfirmMenu.NoButton") : empty));
-		no.setItemMeta(noMeta);
-		inventory.setItem(10, no);
+		super.setInvItem(new ItemStack(Material.GREEN_WOOL),
+		    Utils.AddColors(invContains("ConfirmMenu.YesButton") ? invConfig("ConfirmMenu.YesButton") : empty), null, 16);
+		super.setInvItem(new ItemStack(Material.RED_WOOL),
+		    Utils.AddColors(invContains("ConfirmMenu.NoButton") ? invConfig("ConfirmMenu.NoButton") : empty), null, 10);
 		inventory.setItem(13, spawner(storage.getSpawner()));
 	}
 

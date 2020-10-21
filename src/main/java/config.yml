@@ -5,7 +5,7 @@
 #Please, DO NOT change anything in version section#
 #                                                 #
 ###################################################
-version: 0.1.0-BETA
+version: 0.1.1-BETA
 
 
 
@@ -34,7 +34,7 @@ NameAndLore:
 
 #Number of characters that can be added to name or lore of the spawner
 #Should the plugin counts the color codes as character. For example, &a&lKnightHat has 13 characters if true, and 9 if false
-#!!!blank-spaces(" ") will not be counted.
+#!!!blank spaces(" ") will not be counted.
 CountTheCodes: true
 MinimumChars: 3
 MaximumChars: 15

@@ -13,7 +13,7 @@ import me.TnKnight.SilkySpawner.SilkySpawner;
 public class InventoriesConfiguration {
 
 	private static SilkySpawner Main = SilkySpawner.instance;
-	private static File file = null;
+	public static File file = null;
 	private static FileConfiguration config = null;
 
 	public static void startup() {

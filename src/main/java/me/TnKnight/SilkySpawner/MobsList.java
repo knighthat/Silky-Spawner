@@ -2,6 +2,7 @@ package me.TnKnight.SilkySpawner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,10 +15,11 @@ public enum MobsList {
 	POLAR_BEAR, PUFFERFISH, RABBIT, SALMON, SHEEP, SHULKER, SILVERFISH, SKELETON_HORSE, SLIME, SNOW_MAN, SPIDER, SQUID, STRAY, TROPICAL_FISH, TURTLE,
 	VEX, VILLAGER, VINDICATOR, WITCH, WITHER_BOSS, WITHER_SKELETON, WOLF, ZOMBIE_HORSE, ZOMBIE_PIGMAN, ZOMBIE_VILLAGER;
 
-	private static final List<String> list = new ArrayList<String>(Arrays.asList(MobsList.values()).stream().map(mob -> mob.toString())
-	        .filter(mob -> MobChecking(mob)).sorted().collect(Collectors.toList()));
+	private static final List<String> list = new ArrayList<String>(
+	    Arrays.asList(MobsList.values()).stream().map(mob -> mob.toString()).filter(mob -> MobChecking(mob)).sorted().collect(Collectors.toList()));
 
 	public static List<String> toList() {
+		Collections.sort(list);
 		return list;
 	}
 

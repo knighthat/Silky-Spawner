@@ -1,12 +1,9 @@
-package me.TnKnight.SilkySpawner.MenusStorage;
-
-import java.util.HashMap;
-import java.util.Map;
+package me.TnKnight.SilkySpawner.Menus;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class Storage {
+public class MenusStorage {
 
 	private Player player;
 	private ItemStack spawner;
@@ -19,7 +16,7 @@ public class Storage {
 		this.spawner = spawner;
 	}
 
-	public Storage(Player player) {
+	public MenusStorage(Player player) {
 		super();
 		this.player = player;
 	}
@@ -31,7 +28,4 @@ public class Storage {
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
-
-	public static Map<Player, Boolean> lore = new HashMap<>();
-	public static Map<Player, String> returns = new HashMap<>();
 }

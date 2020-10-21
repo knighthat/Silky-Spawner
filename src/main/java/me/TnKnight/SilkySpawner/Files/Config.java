@@ -9,12 +9,11 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.TnKnight.SilkySpawner.SilkySpawner;
-import me.TnKnight.SilkySpawner.Utils;
 
 public class Config {
 
 	private static SilkySpawner Main = SilkySpawner.instance;
-	private static File file = null;
+	public static File file = null;
 	private static FileConfiguration config = null;
 
 	public static void startup() {
@@ -22,7 +21,6 @@ public class Config {
 			file = new File(Main.getDataFolder(), "config.yml");
 		if (!file.exists())
 			Main.saveResource("config.yml", false);
-		versionChecking();
 	}
 
 	public static void reload() {
@@ -46,15 +44,5 @@ public class Config {
 		if (config == null)
 			reload();
 		return config;
-	}
-
-	private static void versionChecking() {
-		if (Config.getConfig().getString("version").equals(Main.getDescription().getVersion()))
-			return;
-		file.renameTo(new File(Main.getDataFolder(), "config.yml.old"));
-		file.delete();
-		Main.saveResource("config.yml", false);
-		Main.getServer().getConsoleSender().sendMessage(Utils.AddColors(Utils.Prefix
-				+ "&4Changing version detected! For safe, you should move or rename message.yml and guisconfig.yml and let plugin create a new one."));
 	}
 }

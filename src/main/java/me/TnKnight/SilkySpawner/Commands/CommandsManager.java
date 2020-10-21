@@ -2,34 +2,34 @@ package me.TnKnight.SilkySpawner.Commands;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import me.TnKnight.SilkySpawner.MobsList;
 import me.TnKnight.SilkySpawner.SilkySpawner;
-import me.TnKnight.SilkySpawner.Utils;
+import me.TnKnight.SilkySpawner.Storage;
 import me.TnKnight.SilkySpawner.Files.Config;
 import me.TnKnight.SilkySpawner.Files.InventoriesConfiguration;
 import me.TnKnight.SilkySpawner.Files.MessageYAML;
-import me.TnKnight.SilkySpawner.MenusStorage.MenuAbstractClass;
 
 public class CommandsManager implements CommandExecutor, TabCompleter {
 
-	private static SilkySpawner Main = SilkySpawner.instance;
-	private List<AbstractClass> Argument = new ArrayList<AbstractClass>();
-	private List<String> Arg1 = new ArrayList<String>(Arrays.asList("reload"));
-	MenuAbstractClass menuAbstractClass;
+	public static List<CommandsAbstractClass> Argument = new ArrayList<>();
+	private List<String> Arg1 = new ArrayList<>(Arrays.asList("reload"));
 
 	public CommandsManager() {
-		Main.getCommand("SilkySpawner").setExecutor(this);
-		Main.getCommand("SilkySpawner").setTabCompleter(this);
+		SilkySpawner.instance.getCommand("SilkySpawner").setExecutor(this);
+		SilkySpawner.instance.getCommand("SilkySpawner").setTabCompleter(this);
 		Argument.add(new HelpCommand());
 		Argument.add(new EnchantCommand());
 		Argument.add(new SetNameCommand());
@@ -40,10 +40,10 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
 		Arg1.addAll(Argument.stream().map(Class -> Class.getName()).collect(Collectors.toList()));
 	}
 
-	private AbstractClass get(String Name) {
-		Iterator<AbstractClass> ac = Argument.iterator();
+	private CommandsAbstractClass get(String Name) {
+		Iterator<CommandsAbstractClass> ac = Argument.iterator();
 		while (ac.hasNext()) {
-			AbstractClass sCommand = (AbstractClass) ac.next();
+			CommandsAbstractClass sCommand = (CommandsAbstractClass) ac.next();
 			if (sCommand.getName().equalsIgnoreCase(Name))
 				return sCommand;
 		}
@@ -58,45 +58,37 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
 					sender.sendMessage("/silkyspawner help");
 					break;
 				default :
-					switch (args[0].toLowerCase()) {
-						case "reload" :
-							if (sender.hasPermission(Config.getConfig().getString("CommandsAssistant.reload.Permission"))) {
-								Config.reload();
-								MessageYAML.reload();
-								InventoriesConfiguration.reload();
-								Utils.Prefix = Config.getConfig().getString("Prefix");
-								AbstractClass.HoverColor = Config.getConfig().getString("HelpCommand.TextColor");
-								AbstractClass.TextColor = Config.getConfig().getString("HelpCommand.HoverText");
-								AbstractClass.HoverText = Config.getConfig().getString("HelpCommand.HoverColor");
-								sender.sendMessage(Utils.getMessage("ReloadMessage"));
-							} else
-								sender.sendMessage(Utils.getMessage("NoPerm").replace("%perm%",
-								    Config.getConfig().getString("CommandsAssistant.reload.Permission")));
-							break;
-						default :
-							if (!(sender instanceof Player))
-								return true;
-							Player player = (Player) sender;
-							AbstractClass command = get(args[0]) == null ? get("help") : get(args[0]);
-							String path = "CommandsAssistant." + args[0].toLowerCase() + ".Permisson";
-							if (!args[0].equalsIgnoreCase("create") && Config.getConfig().contains(path)
-							    && !player.hasPermission(Config.getConfig().getString(path)))
-								player.sendMessage(Utils.getMessage("NoPerm").replace("%perm%", Config.getConfig().getString(path)));
-							final List<String> arg1 = new ArrayList<String>(
-							    Arrays.asList(args).stream().filter(string -> !string.equals(args[0])).collect(Collectors.toList()));
-							try {
-								command.executeCommand(player, arg1.toArray(new String[arg1.size()]));
-							} catch (Exception e) {
-								String StackStrace = String.valueOf(e.getStackTrace()[0]);
-								StackStrace = StackStrace.substring(StackStrace.lastIndexOf("(")).replace(")", "").replace("(", "").replace(".java",
-								    "") + " -> " + e.getCause();
-								player.sendMessage(Utils.getMessage("Error").replace("%error%", StackStrace));
-								player.sendMessage(Utils.AddColors(MessageYAML.getConfig().getString("ErrorMessage")));
-								e.printStackTrace();
-							}
+					if (args[0].equalsIgnoreCase("reload")) {
+						if (sender.hasPermission(Storage.getPerm("reload"))) {
+							Config.reload();
+							MessageYAML.reload();
+							InventoriesConfiguration.reload();
+							sender.sendMessage(Storage.getMsg("ReloadMessage"));
+						} else
+							sender.sendMessage(Storage.getMsg("NoPerm").replace("%perm%", Storage.getPerm("reload")));
+					} else if (sender instanceof Player) {
+						Player player = (Player) sender;
+						String subCmd = args[0].toLowerCase();
+						CommandsAbstractClass command = get(subCmd) == null ? get("help") : get(subCmd);
+						if (!args[0].equalsIgnoreCase("create") && !Storage.confirmPerm(player, subCmd)) {
+							player.sendMessage(Storage.getMsg("NoPerm").replace("%perm%", Storage.getPerm(subCmd)));
+							return true;
+						}
+						final List<String> arg1 = new ArrayList<>(
+						    Arrays.asList(args).stream().filter(string -> !string.equals(args[0])).collect(Collectors.toList()));
+						try {
+							command.executeCommand(player, arg1.toArray(new String[arg1.size()]));
+						} catch (Exception e) {
+							String StackStrace = String.valueOf(e.getStackTrace()[0]);
+							StackStrace = StackStrace.substring(StackStrace.lastIndexOf("(")).replace(")", "").replace("(", "").replace(".java", "")
+							    .concat(" -> " + e.getCause());
+							player.sendMessage(Storage.getMsg("Error").replace("%error%", StackStrace));
+							player.sendMessage(Storage.getMsg("ErrorMessage"));
+							e.printStackTrace();
+						}
 					}
-
 			}
+
 		}
 		return true;
 	}
@@ -121,6 +113,20 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
 							results.add(filter);
 					break;
 			}
+		if (sender instanceof Player && (args.length == 3 && args[0].equalsIgnoreCase("lore"))
+		    && (args[1].equalsIgnoreCase("set") || args[1].equalsIgnoreCase("insert") || args[1].equalsIgnoreCase("remove"))) {
+			Player player = (Player) sender;
+			ItemStack item = player.getInventory().getItemInMainHand();
+			if (item.getType().equals(Material.SPAWNER) && item.getItemMeta().hasLore()) {
+				List<Integer> lore = new ArrayList<>();
+				for (int i = 0; i < item.getItemMeta().getLore().size() - 1; i++)
+					lore.add(i + 1);
+				for (int i : lore)
+					if (String.valueOf(i).startsWith(args[2]))
+						results.add(String.valueOf(i));
+			}
+		}
+		Collections.sort(results);
 		return results;
 	}
 }

@@ -1,4 +1,4 @@
-package me.TnKnight.SilkySpawner.MenusStorage;
+package me.TnKnight.SilkySpawner.Menus;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -9,7 +9,7 @@ import me.TnKnight.SilkySpawner.Files.InventoriesConfiguration;
 
 public abstract class AbstractMobsListMenu extends MenuAbstractClass {
 
-	public AbstractMobsListMenu(Storage storage) {
+	public AbstractMobsListMenu(MenusStorage storage) {
 		super(storage);
 	}
 	protected int page = 0;
@@ -17,14 +17,16 @@ public abstract class AbstractMobsListMenu extends MenuAbstractClass {
 	protected int index = 0;
 
 	public void fillItem() {
-		ItemStack filler = super.FILLER;
+		ItemStack filler = new ItemStack(Material.getMaterial(invContains("CreateSpawnerMenu.Fill")
+		    ? Utils.ItemsChecking(invConfig("CreateSpawnerMenu.Fill")) ? invConfig("CreateSpawnerMenu.Fill") : "AIR"
+		    : "AIR"));
 		ItemMeta fMeta = filler.getItemMeta();
 		fMeta.setDisplayName(" ");
 		filler.setItemMeta(fMeta);
 		for (int rows = 0; rows < 6; rows++)
 			for (int slot = rows * 9; slot < rows * 9 + 9; slot++)
 				if (rows == 0 || rows == 5 || ((rows > 0 && rows < 5) && (rows * 9 == slot || slot == rows * 9 + 8)))
-					inventory.setItem(slot, super.FILLER);
+					inventory.setItem(slot, filler);
 		addItem(Material.DARK_OAK_BUTTON, "CreateSpawnerMenu.PreviousPage", 48);
 		addItem(Material.REDSTONE, "CreateSpawnerMenu.GoBackButton", 49);
 		addItem(Material.DARK_OAK_BUTTON, "CreateSpawnerMenu.NextPage", 50);

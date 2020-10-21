@@ -12,7 +12,7 @@ import me.TnKnight.SilkySpawner.SilkySpawner;
 
 public class MessageYAML {
 
-	private static File file = null;
+	public static File file = null;
 	private static FileConfiguration config = null;
 	private static SilkySpawner Main = SilkySpawner.instance;
 

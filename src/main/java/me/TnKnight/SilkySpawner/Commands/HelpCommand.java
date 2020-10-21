@@ -1,5 +1,7 @@
 package me.TnKnight.SilkySpawner.Commands;
 
+import java.util.Iterator;
+
 import org.bukkit.entity.Player;
 
 import me.TnKnight.SilkySpawner.Utils;
@@ -9,7 +11,7 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 
-public class HelpCommand extends AbstractClass {
+public class HelpCommand extends CommandsAbstractClass {
 	@Override
 	public String getName() {
 		return "help";
@@ -28,17 +30,14 @@ public class HelpCommand extends AbstractClass {
 	@Override
 	public void executeCommand(Player player, String[] args) {
 		player.sendMessage(Utils.AddColors(Config.getConfig().getString("HelpCommand.Header")));
-		Config.getConfig().getConfigurationSection("CommandsAssistant").getKeys(false).forEach(section -> {
-			String path = "CommandsAssistant." + section + ".";
-			ComponentBuilder builder = new ComponentBuilder(
-					ChatColor.valueOf(TextColor) + Config.getConfig().getString(path + "Usage"));
-			builder.event(
-					new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, Config.getConfig().getString(path + "Usage")));
-			builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-					new ComponentBuilder(HoverText).color(ChatColor.valueOf(HoverColor)).create()));
-			builder.appendLegacy(ChatColor.translateAlternateColorCodes('&',
-					"&f - " + Config.getConfig().getString(path + "Description")));
+		Iterator<CommandsAbstractClass> cmdAb = CommandsManager.Argument.iterator();
+		while (cmdAb.hasNext()) {
+			CommandsAbstractClass sCommand = (CommandsAbstractClass) cmdAb.next();
+			ComponentBuilder builder = new ComponentBuilder(sCommand.getUsage());
+			builder.color(super.TextColor()).event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, sCommand.getUsage()))
+			    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(super.HoverText()).color(super.HoverColor()).create()))
+			    .append(ChatColor.translateAlternateColorCodes('&', "&f - " + sCommand.getDescription()));
 			player.spigot().sendMessage(builder.create());
-		});
+		}
 	}
 }

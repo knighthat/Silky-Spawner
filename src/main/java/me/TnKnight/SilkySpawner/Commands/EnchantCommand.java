@@ -10,11 +10,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.TnKnight.SilkySpawner.CustomEnchantment;
+import me.TnKnight.SilkySpawner.Storage;
 import me.TnKnight.SilkySpawner.Utils;
 import me.TnKnight.SilkySpawner.Files.Config;
 import net.md_5.bungee.api.ChatColor;
 
-public class EnchantCommand extends AbstractClass {
+public class EnchantCommand extends CommandsAbstractClass {
 
 	@Override
 	public String getName() {
@@ -34,28 +35,26 @@ public class EnchantCommand extends AbstractClass {
 	@Override
 	public void executeCommand(Player player, String[] args) {
 		if (!Config.getConfig().getBoolean("CustomEnchantment")) {
-			player.sendMessage(Utils.getMessage("CETurnedOff"));
+			player.sendMessage(Storage.getMsg("CETurnedOff"));
 			return;
 		}
 		if (args.length > 0) {
-			player.sendMessage(Utils.getMessage("MistypedCommand").replace("%command%", getUsage()));
+			player.spigot().sendMessage(super.cBuilder(getUsage()).create());
 		} else if (player.getInventory().getItemInMainHand().getType().toString().endsWith("_PICKAXE")) {
 			ItemStack pickaxe = player.getInventory().getItemInMainHand();
 			if (!pickaxe.getEnchantments().containsKey(CustomEnchantment.PICKDASPAWNER)) {
 				ItemMeta meta = pickaxe.getItemMeta();
-				List<String> lore = new ArrayList<String>(
-						Arrays.asList(ChatColor.GRAY + Config.getConfig().getString("EnchantmentName")));
+				List<String> lore = new ArrayList<String>(Arrays.asList(ChatColor.GRAY + Config.getConfig().getString("EnchantmentName")));
 				if (meta.getLore() != null && meta.getLore().size() > 1)
-					lore.addAll(meta.getLore().stream().map(string -> Utils.AddColors(string))
-							.collect(Collectors.toList()));
+					lore.addAll(meta.getLore().stream().map(string -> Utils.AddColors(string)).collect(Collectors.toList()));
 				meta.setLore(lore);
 				pickaxe.setItemMeta(meta);
 				pickaxe.addUnsafeEnchantment(CustomEnchantment.PICKDASPAWNER, 1);
-				player.sendMessage(Utils.getMessage("Success"));
+				player.sendMessage(Storage.getMsg("Success"));
 			} else
-				player.sendMessage(Utils.getMessage("AlreadyAdded"));
+				player.sendMessage(Storage.getMsg("AlreadyAdded"));
 		} else
-			player.sendMessage(Utils.getMessage("NotHoldingPickaxe"));
+			player.sendMessage(Storage.getMsg("NotHoldingPickaxe"));
 		return;
 	}
 

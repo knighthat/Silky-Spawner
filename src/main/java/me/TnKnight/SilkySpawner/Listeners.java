@@ -19,15 +19,17 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.TnKnight.SilkySpawner.Files.Config;
-import me.TnKnight.SilkySpawner.MenusStorage.MenuAbstractClass;
+import me.TnKnight.SilkySpawner.Menus.MenuAbstractClass;
 
 public class Listeners implements Listener {
+
+	private final Double serialID = 5.85731858674105;
+	public static final Double Serial = 5.85731840133667;
 
 	@EventHandler
 	public void onSpawnerBreaking(BlockBreakEvent e) {
@@ -39,21 +41,21 @@ public class Listeners implements Listener {
 				Location sLocation = spawner.getLocation();
 				if (Config.getConfig().getBoolean("Require")
 				    && !player.getGameMode().equals(GameMode.valueOf(Config.getConfig().getString("GameMode").toUpperCase()))) {
-					player.sendMessage(Utils.AddColors(Utils.Prefix + Config.getConfig().getString("GameModeMessage")));
+					player.sendMessage(Utils.AddColors(Storage.Prefix() + Config.getConfig().getString("GameModeMessage")));
 					e.setCancelled(true);
 					return;
 				}
 				List<Entity> Entities = new ArrayList<Entity>(spawner.getWorld()
 				    .getNearbyEntities(sLocation.add(0.5, 1.0, 0.5), 0, 2.0 + Config.getConfig().getDouble("NameAndLore.Distance"), 0).stream()
 				    .filter(entity -> entity.getType().equals(EntityType.ARMOR_STAND)).filter(entity -> entity.getCustomName() != null)
-				    .collect(Collectors.toList()));
+				    .filter(entity -> ((ArmorStand) entity).getHealth() == Serial).collect(Collectors.toList()));
 				ItemStack iSpawner = new ItemStack(Material.SPAWNER, 1);
 				EntityType creature = ((CreatureSpawner) spawner.getState()).getSpawnedType();
 				BlockStateMeta bMeta = (BlockStateMeta) iSpawner.getItemMeta();
 				CreatureSpawner cSpawner = (CreatureSpawner) bMeta.getBlockState();
 				cSpawner.setSpawnedType(creature);
 				bMeta.setBlockState(cSpawner);
-				if (!Entities.isEmpty()) {
+				if (Entities.size() > 0) {
 					List<String> lore = new ArrayList<String>();
 					bMeta.setDisplayName(Entities.get(0).getCustomName());
 					for (int i = 1; i < Entities.size(); i++)
@@ -66,55 +68,53 @@ public class Listeners implements Listener {
 				for (Entity entity : Entities)
 					entity.remove();
 			} else {
-				e.getPlayer().sendMessage(Utils.AddColors(Utils.Prefix + Config.getConfig().getString("BreakMessage")));
+				e.getPlayer().sendMessage(Utils.AddColors(Storage.Prefix() + Config.getConfig().getString("BreakMessage")));
 				e.setCancelled(true);
 			}
+	}
+
+	private void spawnAS(Block block, String name, Double addY) {
+		ArmorStand as = block.getWorld().spawn(block.getLocation().add(.5, addY, .5), ArmorStand.class);
+		as.setVisible(false);
+		as.setHealth(serialID);
+		as.setBasePlate(false);
+		as.setGravity(false);
+		as.setInvulnerable(true);
+		as.setCollidable(false);
+		as.setCanPickupItems(false);
+		as.setCustomName(Utils.AddColors(name));
+		as.setCustomNameVisible(true);
 	}
 
 	@EventHandler
 	public void onSpawnerPlacing(BlockPlaceEvent e) {
 		if (e.getBlock().getType().equals(Material.SPAWNER))
 			if (e.getItemInHand().getItemMeta().hasDisplayName()) {
-				Player player = e.getPlayer();
-				ItemStack iSpawner = e.getItemInHand();
-				ItemMeta iMeta = iSpawner.getItemMeta();
+				ItemMeta iMeta = e.getItemInHand().getItemMeta();
 				Block bSpawner = e.getBlock();
-				Double Spacing = Config.getConfig().getDouble("NameAndLore.Spacing") < 0.0 ? 1.0
-				    : (Config.getConfig().getDouble("NameAndLore.Spacing") > 1.0 ? 1.0 : Config.getConfig().getDouble("NameAndLore.Spacing"));
-				Double Distance = Config.getConfig().getDouble("NameAndLore.Distance") < 0.0 ? 1.0
-				    : (Config.getConfig().getDouble("NameAndLore.Distance") > 1.0 ? 1.0 : Config.getConfig().getDouble("NameAndLore.Distance"));
-				ArmorStand asName = (ArmorStand) bSpawner.getWorld().spawnEntity(bSpawner.getLocation().add(0.5, 1.0 + Distance, 0.5),
-				    EntityType.ARMOR_STAND);
-				asName.setVisible(false);
-				asName.setRemoveWhenFarAway(true);
-				asName.setCustomNameVisible(true);
-				asName.setGravity(false);
-				asName.setInvulnerable(true);
-				asName.setCustomName(Utils.AddColors(iMeta.getDisplayName()));
+				Double space = Config.getConfig().getDouble("NameAndLore.Spacing");
+				if (space < 0.0 || space > 1.0)
+					space = 1.0;
+				Double distance = Config.getConfig().getDouble("NameAndLore.Distance");
+				if (distance < 0.0 || space > 1.0)
+					distance = 1.0;
+				spawnAS(bSpawner, iMeta.getDisplayName(), 1.0 + distance);
 				if (iMeta.hasLore())
-					for (int i = 0; i < iMeta.getLore().size() - 1; i++) {
-						ArmorStand asLore = (ArmorStand) bSpawner.getWorld()
-						    .spawnEntity(bSpawner.getLocation().add(0.5, (1.0 + Distance - Spacing) - (Spacing * i), 0.5), EntityType.ARMOR_STAND);
-						asLore.setVisible(false);
-						asLore.setRemoveWhenFarAway(true);
-						asLore.setCustomNameVisible(true);
-						asLore.setGravity(false);
-						asLore.setInvulnerable(true);
-						asLore.setCustomName(Utils.AddColors(iMeta.getLore().get(i)));
-					}
-				player.sendMessage(Utils.getMessage("PlaceSpawner").replace("%name%", iSpawner.getItemMeta().getDisplayName()));
+					for (int i = 0; i < iMeta.getLore().size() - 1; i++)
+						spawnAS(bSpawner, iMeta.getLore().get(i), (1.0 + distance - space) - (space * i));
+				e.getPlayer().sendMessage(Storage.getMsg("PlaceSpawner").replace("%name%", iMeta.getDisplayName()));
 			} else
-				e.getPlayer().sendMessage(Utils.getMessage("NoName"));
+				e.setCancelled(true);
+		if (e.isCancelled())
+			e.getPlayer().sendMessage(Storage.getMsg("NoName"));
 	}
 
 	@EventHandler
 	public void MenuClicked(InventoryClickEvent e) {
-		if (e.getCurrentItem() == null || e.getCurrentItem().getType().equals(Material.AIR))
-			return;
-		InventoryHolder holder = e.getClickedInventory().getHolder();
-		if (holder instanceof MenuAbstractClass) {
+		if (e.getCurrentItem() != null && !e.getCurrentItem().getType().equals(Material.AIR)
+		    && e.getClickedInventory().getHolder() instanceof MenuAbstractClass) {
 			e.setCancelled(true);
-			MenuAbstractClass menu = (MenuAbstractClass) holder;
+			MenuAbstractClass menu = (MenuAbstractClass) e.getClickedInventory().getHolder();
 			menu.itemClicked(e);
 		}
 	}

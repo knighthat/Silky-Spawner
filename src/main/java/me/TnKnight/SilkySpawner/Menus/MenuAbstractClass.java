@@ -1,23 +1,25 @@
-package me.TnKnight.SilkySpawner.MenusStorage;
+package me.TnKnight.SilkySpawner.Menus;
+
+import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import me.TnKnight.SilkySpawner.Storage;
 import me.TnKnight.SilkySpawner.Utils;
-import me.TnKnight.SilkySpawner.Commands.AbstractClass;
 import me.TnKnight.SilkySpawner.Files.InventoriesConfiguration;
 
-public abstract class MenuAbstractClass implements InventoryHolder {
+public abstract class MenuAbstractClass extends Storage implements InventoryHolder {
 
 	protected Inventory inventory;
-	protected Storage storage;
+	protected MenusStorage storage;
 
-	public MenuAbstractClass(Storage storage) {
+	public MenuAbstractClass(MenusStorage storage) {
 		this.storage = storage;
 	}
 
@@ -36,22 +38,24 @@ public abstract class MenuAbstractClass implements InventoryHolder {
 	public Inventory getInventory() {
 		return inventory;
 	}
-
-	protected ItemStack FILLER = new ItemStack(Material.getMaterial(
-	    invContains("CreateSpawnerMenu.Fill") ? Utils.ItemsChecking(invConfig("CreateSpawnerMenu.Fill")) ? invConfig("CreateSpawnerMenu.Fill") : "AIR"
-	        : "AIR"));
 	protected void sendMes(Player player, String Display, String Suggestion) {
 		player.closeInventory();
 		player.sendMessage(" ");
-		player.spigot().sendMessage(Utils.hoverNclick("/silkyspawner " + Display, AbstractClass.TextColor, AbstractClass.HoverText,
-		    AbstractClass.HoverColor, "/silkyspawner " + Suggestion));
+		player.spigot().sendMessage(Utils.hoverNclick("/silkyspawner " + Display, "/silkyspawner " + Suggestion));
 		player.sendMessage(" ");
 	}
-	protected final String empty = "&c&lEMPTY!!!";
 	protected String invConfig(String path) {
 		return Utils.AddColors(InventoriesConfiguration.getConfig().getString(path));
 	}
 	protected boolean invContains(String path) {
 		return InventoriesConfiguration.getConfig().contains(path);
+	}
+	protected void setInvItem(ItemStack item, String name, List<String> lore, int slot) {
+		ItemMeta iMeta = item.getItemMeta();
+		iMeta.setDisplayName(name);
+		if (lore != null && lore.size() > 0)
+			iMeta.setLore(lore);
+		item.setItemMeta(iMeta);
+		inventory.setItem(slot, item);
 	}
 }
