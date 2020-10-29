@@ -1,9 +1,12 @@
 package me.TnKnight.SilkySpawner.Menus;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -12,14 +15,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import me.TnKnight.SilkySpawner.Storage;
 import me.TnKnight.SilkySpawner.Utils;
-import me.TnKnight.SilkySpawner.Files.InventoriesConfiguration;
+import me.TnKnight.SilkySpawner.Files.InvConfiguration;
 
-public abstract class MenuAbstractClass extends Storage implements InventoryHolder {
+public abstract class MenuManager extends Storage implements InventoryHolder {
 
 	protected Inventory inventory;
 	protected MenusStorage storage;
 
-	public MenuAbstractClass(MenusStorage storage) {
+	public MenuManager(MenusStorage storage) {
 		this.storage = storage;
 	}
 
@@ -29,7 +32,7 @@ public abstract class MenuAbstractClass extends Storage implements InventoryHold
 	public abstract void setMenuItems();
 
 	public void openMenu() {
-		inventory = Bukkit.createInventory(this, getRows() * 9, getMenuName());
+		inventory = Bukkit.createInventory(this, getRows() * 9, Utils.AddColors(getMenuName()));
 		this.setMenuItems();
 		storage.getPlayer().openInventory(inventory);
 	}
@@ -38,24 +41,21 @@ public abstract class MenuAbstractClass extends Storage implements InventoryHold
 	public Inventory getInventory() {
 		return inventory;
 	}
-	protected void sendMes(Player player, String Display, String Suggestion) {
-		player.closeInventory();
-		player.sendMessage(" ");
-		player.spigot().sendMessage(Utils.hoverNclick("/silkyspawner " + Display, "/silkyspawner " + Suggestion));
-		player.sendMessage(" ");
+	protected String getInv(String path) {
+		Validate.notNull(InvConfiguration.getConfig().getString(path), path + nll);
+		return InvConfiguration.getConfig().getString(path);
 	}
-	protected String invConfig(String path) {
-		return Utils.AddColors(InventoriesConfiguration.getConfig().getString(path));
-	}
-	protected boolean invContains(String path) {
-		return InventoriesConfiguration.getConfig().contains(path);
-	}
-	protected void setInvItem(ItemStack item, String name, List<String> lore, int slot) {
+	protected void setInvItem(Material material, int amount, String name, List<String> lore, int slot) {
+		ItemStack item = new ItemStack(material);
+		item.setAmount(amount);
 		ItemMeta iMeta = item.getItemMeta();
-		iMeta.setDisplayName(name);
+		iMeta.setDisplayName(Utils.AddColors(name));
 		if (lore != null && lore.size() > 0)
 			iMeta.setLore(lore);
 		item.setItemMeta(iMeta);
 		inventory.setItem(slot, item);
+	}
+	protected boolean contains(String material) {
+		return Arrays.stream(Material.values()).map(Material::name).collect(Collectors.toList()).contains(material.toUpperCase());
 	}
 }

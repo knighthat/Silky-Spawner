@@ -20,7 +20,7 @@ public class CustomEnchantment {
 		if (!registered)
 			registerEnchantment(PICKDASPAWNER);
 		SilkySpawner.instance.getServer().getConsoleSender()
-		    .sendMessage(Utils.AddColors(Storage.Prefix() + "&fCustom Enchanment successfully registered!"));
+		    .sendMessage(Utils.AddColors(SilkySpawner.getName + "Custom Enchanment successfully registered!"));
 	}
 
 	@SuppressWarnings("unchecked")

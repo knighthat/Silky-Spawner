@@ -10,7 +10,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.TnKnight.SilkySpawner.SilkySpawner;
 
-public class InventoriesConfiguration {
+public class InvConfiguration {
 
 	private static SilkySpawner Main = SilkySpawner.instance;
 	public static File file = null;

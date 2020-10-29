@@ -1,17 +1,13 @@
 package me.TnKnight.SilkySpawner.Menus;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
-import me.TnKnight.SilkySpawner.Utils;
-
-public class LoreMenu extends MenuAbstractClass {
+public class LoreMenu extends MenuManager {
 
 	public LoreMenu(MenusStorage storage) {
 		super(storage);
@@ -19,7 +15,7 @@ public class LoreMenu extends MenuAbstractClass {
 
 	@Override
 	public String getMenuName() {
-		return invContains("LoreModificatiorMenu.Title") ? invConfig("LoreModificatiorMenu.Title") : empty;
+		return getInv("LoreModificatiorMenu.Title");
 	}
 
 	@Override
@@ -27,8 +23,21 @@ public class LoreMenu extends MenuAbstractClass {
 		return 1;
 	}
 
-	private final List<Material> itemslist = new ArrayList<>(
-	    Arrays.asList(Material.FEATHER, Material.REDSTONE_TORCH, Material.PISTON, Material.BARRIER, Material.REDSTONE));
+	private Map<Integer, Material> items = new HashMap<>();
+	private Map<Integer, String> commands = new HashMap<>();
+	{
+		items.put(0, Material.FEATHER);
+		items.put(1, Material.REDSTONE_TORCH);
+		items.put(2, Material.PISTON);
+		items.put(3, Material.BARRIER);
+		items.put(8, Material.REDSTONE);
+		commands.put(0, "Add");
+		commands.put(1, "Set");
+		commands.put(2, "Insert");
+		commands.put(3, "Remove");
+		commands.put(8, "GoBack");
+
+	}
 
 	@Override
 	public void itemClicked(InventoryClickEvent e) {
@@ -38,22 +47,18 @@ public class LoreMenu extends MenuAbstractClass {
 			new MainMenu(new MenusStorage(player)).openMenu();
 			return;
 		}
-		String function = "lore "
-		    + (slot == 0 ? "add" : slot == 1 ? "set" : slot == 2 ? "insert" : "remove").concat(slot > 0 ? " [line]" : "").concat(" <lore>");
+		String perm = "menu.lore.";
+		if (!permConfirm(player, perm + commands.get(slot).toLowerCase()) && !permConfirm(player, "menu.*") && !permConfirm(player, perm + "*"))
+			return;
+		String function = "lore " + commands.get(slot).concat(slot > 0 ? " [line]" : "").concat(" <lore>");
 		sendMes(player, function, function.replace("[line] ", "").replace("<lore>", ""));
-	}
-
-	private String Path(String button) {
-		return invContains("LoreModificatiorMenu." + button + "Button") ? invConfig("LoreModificatiorMenu." + button + "Button") : empty;
 	}
 
 	@Override
 	public void setMenuItems() {
-		for (int slot = 0; slot < itemslist.size(); slot++) {
-			String name = Path(
-			    (slot == 0 ? "Add" : slot == 1 ? "Set" : slot == 2 ? "Insert" : slot == 3 ? "Remove" : "GoBack").concat(slot < 4 ? "Lore" : ""));
-			super.setInvItem(new ItemStack(itemslist.get(slot)), Utils.AddColors(name), null, slot == 4 ? 8 : slot);
-		}
+		for (int slot : items.keySet())
+			setInvItem(items.get(slot), 1, getInv("LoreModificatiorMenu." + commands.get(slot) + ".Button"), null, slot);
+
 	}
 
 }

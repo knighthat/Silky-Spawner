@@ -19,13 +19,15 @@ import me.TnKnight.SilkySpawner.MobsList;
 import me.TnKnight.SilkySpawner.SilkySpawner;
 import me.TnKnight.SilkySpawner.Storage;
 import me.TnKnight.SilkySpawner.Files.Config;
-import me.TnKnight.SilkySpawner.Files.InventoriesConfiguration;
-import me.TnKnight.SilkySpawner.Files.MessageYAML;
+import me.TnKnight.SilkySpawner.Files.InvConfiguration;
+import me.TnKnight.SilkySpawner.Files.Message;
+import me.TnKnight.SilkySpawner.Files.Mobs;
 
-public class CommandsManager implements CommandExecutor, TabCompleter {
+public class CommandsManager extends Storage implements CommandExecutor, TabCompleter {
 
 	public static List<CommandsAbstractClass> Argument = new ArrayList<>();
 	private List<String> Arg1 = new ArrayList<>(Arrays.asList("reload"));
+	private final List<String> nSuggestion = new ArrayList<>(Arrays.asList("0", "1", "2", "5"));
 
 	public CommandsManager() {
 		SilkySpawner.instance.getCommand("SilkySpawner").setExecutor(this);
@@ -53,42 +55,39 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (label.equalsIgnoreCase("SilkySpawner") || label.equalsIgnoreCase("SS") || label.equalsIgnoreCase("Spawner")) {
-			switch (args.length) {
-				case 0 :
+			if (args.length == 0 || (args.length >= 1 && !Arg1.contains(args[0].toLowerCase()))) {
+				if (sender instanceof Player) {
+					sendMes(((Player) sender), "help", "help");
+				} else
 					sender.sendMessage("/silkyspawner help");
-					break;
-				default :
-					if (args[0].equalsIgnoreCase("reload")) {
-						if (sender.hasPermission(Storage.getPerm("reload"))) {
-							Config.reload();
-							MessageYAML.reload();
-							InventoriesConfiguration.reload();
-							sender.sendMessage(Storage.getMsg("ReloadMessage"));
-						} else
-							sender.sendMessage(Storage.getMsg("NoPerm").replace("%perm%", Storage.getPerm("reload")));
-					} else if (sender instanceof Player) {
-						Player player = (Player) sender;
-						String subCmd = args[0].toLowerCase();
-						CommandsAbstractClass command = get(subCmd) == null ? get("help") : get(subCmd);
-						if (!args[0].equalsIgnoreCase("create") && !Storage.confirmPerm(player, subCmd)) {
-							player.sendMessage(Storage.getMsg("NoPerm").replace("%perm%", Storage.getPerm(subCmd)));
-							return true;
-						}
-						final List<String> arg1 = new ArrayList<>(
-						    Arrays.asList(args).stream().filter(string -> !string.equals(args[0])).collect(Collectors.toList()));
-						try {
-							command.executeCommand(player, arg1.toArray(new String[arg1.size()]));
-						} catch (Exception e) {
-							String StackStrace = String.valueOf(e.getStackTrace()[0]);
-							StackStrace = StackStrace.substring(StackStrace.lastIndexOf("(")).replace(")", "").replace("(", "").replace(".java", "")
-							    .concat(" -> " + e.getCause());
-							player.sendMessage(Storage.getMsg("Error").replace("%error%", StackStrace));
-							player.sendMessage(Storage.getMsg("ErrorMessage"));
-							e.printStackTrace();
-						}
-					}
+				return true;
+			} else if (args[0].equalsIgnoreCase("reload")) {
+				if (!permConfirm(sender, "admin"))
+					return true;
+				Config.reload();
+				Message.reload();
+				InvConfiguration.reload();
+				Mobs.reload();
+				sender.sendMessage(getMsg("ReloadMessage"));
+			} else if (sender instanceof Player) {
+				Player player = (Player) sender;
+				String subCmd = args[0].toLowerCase();
+				CommandsAbstractClass command = get(subCmd) == null ? get("help") : get(subCmd);
+				if (!args[0].equalsIgnoreCase("lore") && !args[0].equalsIgnoreCase("create") && !permConfirm(player, "command." + subCmd))
+					return true;
+				final List<String> arg1 = new ArrayList<>(
+				    Arrays.asList(args).stream().filter(string -> !string.equals(args[0])).collect(Collectors.toList()));
+				try {
+					command.executeCommand(player, arg1.toArray(new String[arg1.size()]));
+				} catch (Exception e) {
+					String StackStrace = String.valueOf(e.getStackTrace()[0]);
+					StackStrace = StackStrace.substring(StackStrace.lastIndexOf("(")).replace(")", "").replace("(", "").replace(".java", "")
+					    .concat(" -> " + e.getCause());
+					player.sendMessage(getMsg("Error").replace("%error%", StackStrace));
+					player.sendMessage(getMsg("ErrorMessage"));
+					e.printStackTrace();
+				}
 			}
-
 		}
 		return true;
 	}
@@ -96,37 +95,64 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 		List<String> results = new ArrayList<String>();
-		if (args.length == 1)
-			for (String filter : Arg1)
-				if (filter.toLowerCase().startsWith(args[0].toLowerCase()))
-					results.add(filter);
-		if (args.length == 2)
-			switch (args[0].toLowerCase()) {
-				case "lore" :
+		switch (args.length) {
+			case 1 :
+				for (String filter : Arg1)
+					if (filter.toLowerCase().startsWith(args[0].toLowerCase()))
+						results.add(filter);
+				break;
+			case 2 :
+				if (args[0].equalsIgnoreCase("lore"))
 					for (String filter : LoreCommand.command)
 						if (filter.toLowerCase().startsWith(args[1].toLowerCase()))
 							results.add(filter);
-					break;
-				case "create" :
+				if (args[0].equalsIgnoreCase("create"))
 					for (String filter : MobsList.toList())
 						if (filter.toLowerCase().startsWith(args[1].toLowerCase()))
 							results.add(filter);
-					break;
-			}
-		if (sender instanceof Player && (args.length == 3 && args[0].equalsIgnoreCase("lore"))
-		    && (args[1].equalsIgnoreCase("set") || args[1].equalsIgnoreCase("insert") || args[1].equalsIgnoreCase("remove"))) {
-			Player player = (Player) sender;
-			ItemStack item = player.getInventory().getItemInMainHand();
-			if (item.getType().equals(Material.SPAWNER) && item.getItemMeta().hasLore()) {
-				List<Integer> lore = new ArrayList<>();
-				for (int i = 0; i < item.getItemMeta().getLore().size() - 1; i++)
-					lore.add(i + 1);
-				for (int i : lore)
-					if (String.valueOf(i).startsWith(args[2]))
-						results.add(String.valueOf(i));
-			}
+				if (args[0].equalsIgnoreCase("remove"))
+					for (String filter : nSuggestion)
+						if (filter.toLowerCase().startsWith(args[1].toLowerCase()))
+							results.add(filter);
+				break;
+			case 3 :
+				if (args[0].equalsIgnoreCase("create"))
+					for (String filter : nSuggestion)
+						if (filter.toLowerCase().startsWith(args[2].toLowerCase()))
+							results.add(filter);
+				if (sender instanceof Player && args[0].equalsIgnoreCase("lore") && !args[1].equalsIgnoreCase("add")
+				    && LoreCommand.command.contains(args[1].toLowerCase())) {
+					Player player = (Player) sender;
+					ItemStack item = player.getInventory().getItemInMainHand();
+					if (item.getType().equals(Material.SPAWNER) && item.getItemMeta().hasLore()) {
+						List<Integer> lore = new ArrayList<>();
+						for (int i = 0; i < item.getItemMeta().getLore().size() - 1; i++)
+							lore.add(i + 1);
+						for (int i : lore)
+							if (String.valueOf(i).startsWith(args[2]))
+								results.add(String.valueOf(i));
+					}
+				}
+				break;
 		}
 		Collections.sort(results);
 		return results;
+	}
+}
+abstract class CommandsAbstractClass extends Storage {
+
+	public abstract String getName();
+
+	public abstract String getDescription();
+
+	public abstract String getUsage();
+
+	public abstract void executeCommand(Player player, String[] args);
+
+	protected String getDes(String cmd) {
+		return Config.getConfig().getString("CommandsAssistant." + cmd + ".Description");
+	}
+	protected String getUsg(String cmd) {
+		return Config.getConfig().getString("CommandsAssistant." + cmd + ".Usage");
 	}
 }

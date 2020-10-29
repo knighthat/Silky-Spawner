@@ -34,8 +34,8 @@ public class HelpCommand extends CommandsAbstractClass {
 		while (cmdAb.hasNext()) {
 			CommandsAbstractClass sCommand = (CommandsAbstractClass) cmdAb.next();
 			ComponentBuilder builder = new ComponentBuilder(sCommand.getUsage());
-			builder.color(super.TextColor()).event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, sCommand.getUsage()))
-			    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(super.HoverText()).color(super.HoverColor()).create()))
+			builder.color(TextColor()).event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, sCommand.getUsage()))
+			    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(HoverText()).color(HoverColor()).create()))
 			    .append(ChatColor.translateAlternateColorCodes('&', "&f - " + sCommand.getDescription()));
 			player.spigot().sendMessage(builder.create());
 		}

@@ -82,7 +82,7 @@ CreateSpawnerMenu:
 #########################################
 
 LoreModificatiorMenu:
-  Title: "Lore Modificatior"
+  Title: "&d&lLore Modificatior"
   AddLoreButton: "&aAdd lore"
   SetLoreButton: "&bSet lore"
   InsertLoreButton: "&9Insert lore"
@@ -90,7 +90,22 @@ LoreModificatiorMenu:
   GoBackButton: "&eGo back"
 
     
-    
+#########################################
+#                                       #
+#   REMOVE FLOATING NAME & LORE MENU    #
+#                                       #
+# Please, DO NOT change anything before #
+#       ":" or you will get errors      #
+#                                       #
+#########################################
+
+RemoveMenu:
+  Title: "&b&lHow far should we clear it?"
+  YesButton: "&aStart"
+  CancelButton: "&cCancel"
+  RadiusDisplay: "&6Range: &e&l%radius%"
+  
+
 #########################################
 #                                       #
 #             CONFIRM MENU              #

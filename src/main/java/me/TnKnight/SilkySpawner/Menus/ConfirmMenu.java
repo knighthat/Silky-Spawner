@@ -1,19 +1,13 @@
 package me.TnKnight.SilkySpawner.Menus;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
-import me.TnKnight.SilkySpawner.Storage;
 import me.TnKnight.SilkySpawner.Utils;
-import me.TnKnight.SilkySpawner.Files.Config;
 
-public class ConfirmMenu extends MenuAbstractClass {
+public class ConfirmMenu extends MenuManager {
 
 	public ConfirmMenu(MenusStorage storage) {
 		super(storage);
@@ -21,7 +15,7 @@ public class ConfirmMenu extends MenuAbstractClass {
 
 	@Override
 	public String getMenuName() {
-		return Utils.AddColors(invContains("ConfirmMenu.Title") ? invConfig("ConfirmMenu.Title") : empty);
+		return getInv("ConfirmMenu.Title");
 	}
 
 	@Override
@@ -32,42 +26,50 @@ public class ConfirmMenu extends MenuAbstractClass {
 	@Override
 	public void itemClicked(InventoryClickEvent e) {
 		Player player = (Player) e.getWhoClicked();
-		switch (e.getCurrentItem().getType()) {
-			case GREEN_WOOL :
-				ItemStack spawner = spawner(storage.getSpawner());
-				ItemMeta sMeta = spawner.getItemMeta();
-				sMeta.setDisplayName(null);
-				spawner.setItemMeta(sMeta);
+		ItemStack spawner = storage.getSpawner();
+		String amount = Utils.StripColors(e.getCurrentItem().getItemMeta().getDisplayName());
+		switch (e.getSlot()) {
+			case 9 :
+			case 10 :
+			case 11 :
+			case 15 :
+			case 16 :
+			case 17 :
+				int amt = amount.equals("1") || amount.equals("64") ? Integer.parseInt(amount) : spawner.getAmount() + Integer.parseInt(amount);
+				if (amt < 1 || amt > spawner.getMaxStackSize())
+					amt = amt < 1 ? 1 : 64;
+				spawner.setAmount(amt);
+				storage.setSpawner(spawner);
+				new ConfirmMenu(storage).openMenu();
+				break;
+			case 25 :
 				player.getInventory().addItem(spawner);
-				player.sendMessage(Storage.getMsg("GetSpawner"));
+				player.sendMessage(getMsg("GetSpawner"));
 				player.closeInventory();
 				break;
-			case RED_WOOL :
-				new MobsListMenu(storage).openMenu();;
-				break;
-			default :
-				break;
+			case 19 :
+				new MobsListMenu(storage).openMenu();
 		}
 	}
 
 	@Override
 	public void setMenuItems() {
 		for (int slot = 0; slot < getRows() * 9; slot++)
-			inventory.setItem(slot, new ItemStack(Material.getMaterial(invContains("ConfirmMenu.Fill") ? invConfig("ConfirmMenu.Fill") : "AIR")));
-		super.setInvItem(new ItemStack(Material.GREEN_WOOL),
-		    Utils.AddColors(invContains("ConfirmMenu.YesButton") ? invConfig("ConfirmMenu.YesButton") : empty), null, 16);
-		super.setInvItem(new ItemStack(Material.RED_WOOL),
-		    Utils.AddColors(invContains("ConfirmMenu.NoButton") ? invConfig("ConfirmMenu.NoButton") : empty), null, 10);
-		inventory.setItem(13, spawner(storage.getSpawner()));
+			inventory.setItem(slot, new ItemStack(Material.getMaterial(contains(getInv("ConfirmMenu.Fill")) ? getInv("ConfirmMenu.Fill") : "AIR")));
+		inventory.setItem(13, storage.getSpawner());
+		setInvItem(Material.GREEN_WOOL, 1, getInv("ConfirmMenu.YesButton"), null, 25);
+		setInvItem(Material.RED_WOOL, 1, getInv("ConfirmMenu.NoButton"), null, 19);
+		switch (storage.getType()) {
+			case CREATE :
+				setInvItem(Material.TORCH, 1, "&c1", null, 9);
+				setInvItem(Material.TORCH, 10, "&c-10", null, 10);
+				setInvItem(Material.TORCH, 1, "&c-1", null, 11);
+				setInvItem(Material.REDSTONE_TORCH, 1, "&a+1", null, 15);
+				setInvItem(Material.REDSTONE_TORCH, 10, "&a+10", null, 16);
+				setInvItem(Material.REDSTONE_TORCH, 64, "&a64", null, 17);
+				break;
+			case MODIFICATION :
+				break;
+		}
 	}
-
-	private ItemStack spawner(ItemStack RawItemStack) {
-		ItemMeta iMeta = RawItemStack.getItemMeta();
-		String lore = Utils
-		    .AddColors(Config.getConfig().getString("TypeOfCreature").replace("%creature_type%", Utils.StripColors(iMeta.getDisplayName())));
-		iMeta.setLore(new ArrayList<String>(Arrays.asList(lore)));
-		RawItemStack.setItemMeta(iMeta);
-		return RawItemStack;
-	}
-
 }

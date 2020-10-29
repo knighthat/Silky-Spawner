@@ -12,9 +12,6 @@ import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.TnKnight.SilkySpawner.Utils;
-import me.TnKnight.SilkySpawner.Files.MessageYAML;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 
 public class LoreCommand extends CommandsAbstractClass {
 
@@ -27,12 +24,12 @@ public class LoreCommand extends CommandsAbstractClass {
 
 	@Override
 	public String getDescription() {
-		return super.getDes(getName());
+		return getDes(getName());
 	}
 
 	@Override
 	public String getUsage() {
-		return super.getUsg(getName());
+		return getUsg(getName());
 	}
 
 	@Override
@@ -42,6 +39,8 @@ public class LoreCommand extends CommandsAbstractClass {
 				this.sendMes(player, string);
 			return;
 		}
+		if (!permConfirm(player, "command.lore." + args[0].toLowerCase()) && !permConfirm(player, "command.lore.*"))
+			return;
 		if ((args.length == 1 && args[0].equalsIgnoreCase("add"))
 		    || (args.length == 2 && (!args[0].equalsIgnoreCase("add") && !args[0].equalsIgnoreCase("remove")))) {
 			this.sendMes(player, args[0]);
@@ -49,7 +48,7 @@ public class LoreCommand extends CommandsAbstractClass {
 		}
 		String input = Utils.AddColors(Utils.arrayToString(args, args[0].equalsIgnoreCase("add") ? 1 : 2));
 		if (!args[0].equalsIgnoreCase("remove")) {
-			if (!super.mConfirm(player, "SPAWNER", "Lore"))
+			if (!mConfirm(player, "SPAWNER", "Lore"))
 				return;
 			if (input == null || input.isEmpty()) {
 				this.sendMes(player, args[0].toLowerCase());
@@ -68,11 +67,11 @@ public class LoreCommand extends CommandsAbstractClass {
 				line = Integer.parseInt(args[1]);
 				line -= 1;
 				if (line < 0 || line >= sLore.size()) {
-					player.sendMessage(super.getMsg("OutOfLines").replace("%input%", args[1]));
+					player.sendMessage(getMsg("OutOfLines").replace("%input%", args[1]));
 					return;
 				}
 			} catch (NumberFormatException e) {
-				player.sendMessage(super.getMsg("NotANumber").replace("%input%", args[1]));
+				player.sendMessage(getMsg("NotANumber").replace("%input%", args[1]));
 			}
 		switch (args[0].toLowerCase()) {
 			case "add" :
@@ -95,18 +94,14 @@ public class LoreCommand extends CommandsAbstractClass {
 				sLore.remove(line);
 				break;
 		}
-		sLore.add(Utils.AddColors(super.ValidateCfg("TypeOfCreature", true).replace("%creature_type%",
+		sLore.add(Utils.AddColors(ValidateCfg("TypeOfCreature").replace("%creature_type%",
 		    ((CreatureSpawner) ((BlockStateMeta) spawner.getItemMeta()).getBlockState()).getSpawnedType().name())));
 		sMeta.setLore(sLore);
 		spawner.setItemMeta(sMeta);
 	}
 
 	private void sendMes(Player player, String sCmd) {
-		ComponentBuilder usage = new ComponentBuilder(
-		    ChatColor.translateAlternateColorCodes('&', MessageYAML.getConfig().getString("MistypedCommand")));
-		String cmd = "/silkyspawner lore " + sCmd
-		    + (!sCmd.equalsIgnoreCase("add") ? sCmd.equalsIgnoreCase("remove") ? " [line]" : " [line] <lore>" : " <lore>");
-		usage.append(Utils.hoverNclick(cmd, "/silkyspawner lore " + sCmd));
-		player.spigot().sendMessage(usage.create());
+		String cmd = "lore " + sCmd + (!sCmd.equalsIgnoreCase("add") ? sCmd.equalsIgnoreCase("remove") ? " [line]" : " [line] <lore>" : " <lore>");
+		super.sendMes(player, cmd, "lore " + sCmd);
 	}
 }

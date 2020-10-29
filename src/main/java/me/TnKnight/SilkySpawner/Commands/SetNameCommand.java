@@ -15,19 +15,19 @@ public class SetNameCommand extends CommandsAbstractClass {
 
 	@Override
 	public String getDescription() {
-		return super.getDes(getName());
+		return getDes(getName());
 	}
 
 	@Override
 	public String getUsage() {
-		return super.getUsg(getName());
+		return getUsg(getName());
 	}
 
 	@Override
 	public void executeCommand(Player player, String[] args) {
-		if (!super.mConfirm(player, "SPAWNER", "Name"))
+		if (!mConfirm(player, "SPAWNER", "Name"))
 			return;
-		if (!super.cConfirm(player, Utils.arrayToString(args, 0), getUsage()))
+		if (!cConfirm(player, Utils.arrayToString(args, 0), getUsage()))
 			return;
 		if (!Utils.charsCounting(player, Utils.arrayToString(args, 0), "Name"))
 			return;

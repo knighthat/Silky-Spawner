@@ -10,7 +10,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.TnKnight.SilkySpawner.CustomEnchantment;
-import me.TnKnight.SilkySpawner.Storage;
 import me.TnKnight.SilkySpawner.Utils;
 import me.TnKnight.SilkySpawner.Files.Config;
 import net.md_5.bungee.api.ChatColor;
@@ -35,11 +34,11 @@ public class EnchantCommand extends CommandsAbstractClass {
 	@Override
 	public void executeCommand(Player player, String[] args) {
 		if (!Config.getConfig().getBoolean("CustomEnchantment")) {
-			player.sendMessage(Storage.getMsg("CETurnedOff"));
+			player.sendMessage(getMsg("CETurnedOff"));
 			return;
 		}
 		if (args.length > 0) {
-			player.spigot().sendMessage(super.cBuilder(getUsage()).create());
+			player.spigot().sendMessage(cBuilder(getUsage()).create());
 		} else if (player.getInventory().getItemInMainHand().getType().toString().endsWith("_PICKAXE")) {
 			ItemStack pickaxe = player.getInventory().getItemInMainHand();
 			if (!pickaxe.getEnchantments().containsKey(CustomEnchantment.PICKDASPAWNER)) {
@@ -50,11 +49,11 @@ public class EnchantCommand extends CommandsAbstractClass {
 				meta.setLore(lore);
 				pickaxe.setItemMeta(meta);
 				pickaxe.addUnsafeEnchantment(CustomEnchantment.PICKDASPAWNER, 1);
-				player.sendMessage(Storage.getMsg("Success"));
+				player.sendMessage(getMsg("Success"));
 			} else
-				player.sendMessage(Storage.getMsg("AlreadyAdded"));
+				player.sendMessage(getMsg("AlreadyAdded"));
 		} else
-			player.sendMessage(Storage.getMsg("NotHoldingPickaxe"));
+			player.sendMessage(getMsg("NotHoldingPickaxe"));
 		return;
 	}
 

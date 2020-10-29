@@ -30,7 +30,7 @@ public class GUICommand extends CommandsAbstractClass {
 				new MainMenu(new MenusStorage(player)).openMenu();
 				break;
 			default :
-				player.spigot().sendMessage(super.cBuilder(getUsage()).create());
+				player.spigot().sendMessage(cBuilder(getUsage()).create());
 				break;
 		}
 	}

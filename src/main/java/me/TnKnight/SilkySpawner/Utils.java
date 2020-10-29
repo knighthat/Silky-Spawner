@@ -5,12 +5,7 @@ import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.block.CreatureSpawner;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BlockStateMeta;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import me.TnKnight.SilkySpawner.Files.Config;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -18,7 +13,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
-public class Utils {
+public class Utils extends Storage {
 	public static String AddColors(String String) {
 		return ChatColor.translateAlternateColorCodes('&', String);
 	}
@@ -29,7 +24,7 @@ public class Utils {
 
 	public static TextComponent hoverNclick(String Text, String ClickText) {
 		TextComponent builder = new TextComponent(Text);
-		builder.setColor(Storage.TextColor());
+		builder.setColor(TextColor());
 		builder.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, ClickText));
 		if (ClickText != null)
 			builder.setHoverEvent(
@@ -59,14 +54,6 @@ public class Utils {
 			return false;
 		}
 		return true;
-	}
-
-	public static ItemMeta SpawnCreature(ItemStack Item, EntityType entityType) {
-		BlockStateMeta bMeta = (BlockStateMeta) Item.getItemMeta();
-		CreatureSpawner cSpawner = (CreatureSpawner) bMeta.getBlockState();
-		cSpawner.setSpawnedType(entityType);
-		bMeta.setBlockState(cSpawner);
-		return bMeta;
 	}
 
 	public static boolean ItemsChecking(String Name) {

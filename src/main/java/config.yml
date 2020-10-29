@@ -1,11 +1,12 @@
-###################################################
-#                                                 #
-#                  !! WARNING !!                  #
-#                                                 #
-#Please, DO NOT change anything in version section#
-#                                                 #
-###################################################
-version: 0.1.1-BETA
+#####################################################
+#                                                   #
+#                   !! WARNING !!                   #
+#                                                   #
+# Please, DO NOT change anything in version section #
+#                                                   #
+#####################################################
+version: 0.1.3
+auto-check: true
 
 
 
@@ -29,7 +30,7 @@ GameModeMessage: "&8Only players in survival mode can break this spawner."
 #Spacing stands for is the gap between each line (From 0.1 -> 1 with 1 is a full block height)
 NameAndLore:
   Distance: 2.0
-  Spacing: 0.3
+  Space: 0.3
 
 
 #Number of characters that can be added to name or lore of the spawner
@@ -51,10 +52,6 @@ TypeOfCreature: "&cCreature: &6&l%creature_type%"
 CustomEnchantment: true
 EnchantmentName: "Spawner Picker"
 
-
-CancelCommand: "cancel"
-
-
 #For more color codes. Visit this website: https://www.colorschemer.com/minecraft-color-codes/
 HelpCommand:
   Header: "&9List of all &b&lCLICKABLE &9commands"
@@ -62,7 +59,8 @@ HelpCommand:
   TextColor: YELLOW
   HoverColor: GRAY
   
-  
+
+# You are no longer be able to modify permissions because it caused some type of troubles and less efficent
 CommandsAssistant:
   help:
     Usage: "/silkyspawner help"
@@ -75,7 +73,7 @@ CommandsAssistant:
   enchant:
     Usage: "/silkyspawner enchant"
     Description: "Add custom enchantment to your holding pickaxe"
-    Permission: silkyspawner.command.addenchantment
+    Permission: silkyspawner.command.enchant
   setname:
     Usage: "/silkyspawner setname <name>"
     Description: "Name your spawner"
@@ -83,7 +81,7 @@ CommandsAssistant:
   lore:
     Usage: "/silkyspawner lore "
     Description: "Get help for lore command"
-    Permission: silkyspawner.command.lore
+    Permission: silkyspawner.command.lore.[add/set/insert/remove]
   remove:
     Usage: "/silkyspawner remove <radius>"
     Description: "Remove all the ArmorStands around player."
@@ -91,7 +89,7 @@ CommandsAssistant:
   create:
     Usage: "/silkyspawner create [Mob Type]"
     Description: "Give you a spawner to modify with the specific mob."
-    Permission: silkyspawner.command.create
+    Permission: silkyspawner.command.create.[mob name]
   gui:
     Usage: "/silkyspawner gui"
     Description: "Open GUI instead of using commands"

@@ -5,18 +5,36 @@
 #########################################
 
 ReloadMessage: "&aconfig.yml, message.yml, guisconfig.yml have been reloaded!"
-NoPerm: "&cYou don't have permission %perm% to execute this command!"
-MistypedCommand: "&cUsage: "
-Error: "&4&lErrorCode: &e%error%"
-ErrorMessage: "&bPlease report this &4&lErrorCode &bto admin ASAP!"
 PlaceSpawner: "&2You just placed a spawner named %name%"
-NotHoldingSpawner: "&9You must hold your spawner in main han in order to modify %type%!"
-NotANumber: "&f%input%&7 is not a number!"
-OutOfLines: "&7There is no line number %input%!"
-NoName: "&bYour spawner has no name! Please give it a name."    
 RemoveArmorStandsMessage: "&9All custom ArmorStands have been removed within %radius% blocks."
 
 
+
+#########################################
+#                                       #
+#             ERROR MESSAGE             #
+#                                       #
+#########################################
+
+Error: "&4&lErrorCode: &e%error%"
+ErrorMessage: "&bPlease report this &4&lErrorCode &bto admin ASAP!"
+NoPerm: "&cYou don't have permission &f%perm% &cto execute this command!"
+MistypedCommand: "&cUsage: "
+
+
+#########################################
+#                                       #
+#            SPAWNER MESSAGE            #
+#                                       #
+#########################################
+
+NotANumber: "&f%input%&7 is not a number!"
+OutOfLines: "&7There is no line number %input%!"
+NoName: "&bYour spawner has no name! Please give it a name."   
+NotHoldingSpawner: "&9You must hold your spawner in main han in order to modify %type%!"
+CannotChangeMob: "&3Spawner can't spawn %mob_type%"
+MobChanged: "&bThis spawner is now spawning %mob_type%"
+SameMob: "&aThis spawner is containing %mob_type%"
 
 ##########################################
 #                                        #
@@ -28,7 +46,6 @@ CETurnedOff: "&cYou have to enable CustomEnchantment to use this command!"
 NotHoldingPickaxe: "&9You must hold your pickaxe in your main hand in order to add the enchantment."
 AlreadyAdded: "&cYour pickaxe already had this enchantment."
 Success: "&2Enchantment added to your pickaxe successfully!"
-
 
 
 #########################################
