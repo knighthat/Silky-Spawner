@@ -8,8 +8,11 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.common.io.Files;
@@ -21,6 +24,7 @@ import me.TnKnight.SilkySpawner.Files.Message;
 import me.TnKnight.SilkySpawner.Files.Mobs;
 import me.TnKnight.SilkySpawner.Listeners.Interaction;
 import me.TnKnight.SilkySpawner.Listeners.Spawners;
+import me.TnKnight.SilkySpawner.Menus.MenusStorage;
 
 public class SilkySpawner extends JavaPlugin {
 
@@ -53,6 +57,17 @@ public class SilkySpawner extends JavaPlugin {
 		getServer().getConsoleSender().sendMessage(Utils.AddColors(getName + "All data saved, disabling plugin..."));
 	}
 
+	private static final Map<Player, MenusStorage> storage = new HashMap<>();
+	public static MenusStorage getStorage(Player player) {
+		MenusStorage menusStorage;
+		if (!storage.containsKey(player)) {
+			menusStorage = new MenusStorage(player);
+			storage.put(player, menusStorage);
+		} else
+			return storage.get(player);
+		return menusStorage;
+	}
+
 	private void configChecking() {
 		if (Config.getConfig().getString("version").equals(getDescription().getVersion()))
 			return;
@@ -83,11 +98,14 @@ public class SilkySpawner extends JavaPlugin {
 			BufferedReader file = new BufferedReader(
 			    new InputStreamReader(new URL("https://raw.githubusercontent.com/knighthat/Silky-Spawner/master/plugin.yml").openStream()));
 			String str;
-			while ((str = file.readLine()) != null) {
-				if (str.startsWith("version: ") && !str.replace("version:", "").trim().equals(getDescription().getVersion()))
-					getServer().getConsoleSender().sendMessage(
-					    Utils.AddColors(getName + "A new version " + str.replace("version:", "").trim() + " is avaible. Please update!"));
-			}
+			while ((str = file.readLine()) != null)
+				if (str.startsWith("version: "))
+					if (!str.replace("version:", "").trim().equals(getDescription().getVersion())) {
+						getServer().getConsoleSender().sendMessage(
+						    Utils.AddColors(getName + "&eA new version " + str.replace("version:", "").trim() + " is avaible. Please update!"));
+					} else
+						getServer().getConsoleSender().sendMessage(Utils.AddColors(getName + "You're on the lastest version!"));
+
 			file.close();
 		} catch (IOException e) {
 			getServer().getConsoleSender().sendMessage(Utils.AddColors(getName + "&cChecking failed! Please report to my page ASAP."));

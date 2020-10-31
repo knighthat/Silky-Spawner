@@ -40,8 +40,9 @@ public class MobsListMenu extends AbstractMobsListMenu {
 		Material item = e.getCurrentItem().getType();
 		if (item.equals(Material.SPAWNER)) {
 			String perm = "menu.create.";
-			if (!permConfirm(player, perm + MobsList.toList().get(index).toLowerCase()) && !permConfirm(player, "menu.*")
-			    && !permConfirm(player, perm + "*"))
+			String namePerm = Utils.StripColors(e.getCurrentItem().getItemMeta().getDisplayName()
+			    .replace(Utils.AddColors(ValidateCfg("TypeOfCreature").replace("%creature_type%", "")), ""));
+			if (!permConfirm(player, perm + namePerm.toLowerCase()) && !permConfirm(player, "menu.*") && !permConfirm(player, perm + "*"))
 				return;
 			storage.setType(ConfirmType.CREATE);
 			ItemMeta sMeta = e.getCurrentItem().getItemMeta();
@@ -64,7 +65,7 @@ public class MobsListMenu extends AbstractMobsListMenu {
 						player.sendMessage(getMsg("OnFirstPage"));
 					break;
 				case 50 :
-					if (index++ < MobsList.toList().size()) {
+					if (index + 1 < MobsList.toList().size()) {
 						page += 1;
 						openMenu();
 					} else

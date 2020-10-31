@@ -29,12 +29,28 @@ public class ConfirmMenu extends MenuManager {
 		ItemStack spawner = storage.getSpawner();
 		String amount = Utils.StripColors(e.getCurrentItem().getItemMeta().getDisplayName());
 		switch (e.getSlot()) {
-			case 9 :
-			case 10 :
-			case 11 :
-			case 15 :
-			case 16 :
-			case 17 :
+			case 19 :
+				switch (storage.getType()) {
+					case CREATE :
+						new MobsListMenu(storage).openMenu();
+						break;
+					default :
+						player.closeInventory();
+				}
+				break;
+			case 25 :
+				switch (storage.getType()) {
+					case CREATE :
+						player.getInventory().addItem(spawner);
+						break;
+					default :
+						player.getInventory().setItem(player.getInventory().getHeldItemSlot(), storage.getSpawner());
+						break;
+				}
+				player.sendMessage(getMsg("GetSpawner"));
+				player.closeInventory();
+				break;
+			default :
 				int amt = amount.equals("1") || amount.equals("64") ? Integer.parseInt(amount) : spawner.getAmount() + Integer.parseInt(amount);
 				if (amt < 1 || amt > spawner.getMaxStackSize())
 					amt = amt < 1 ? 1 : 64;
@@ -42,13 +58,6 @@ public class ConfirmMenu extends MenuManager {
 				storage.setSpawner(spawner);
 				new ConfirmMenu(storage).openMenu();
 				break;
-			case 25 :
-				player.getInventory().addItem(spawner);
-				player.sendMessage(getMsg("GetSpawner"));
-				player.closeInventory();
-				break;
-			case 19 :
-				new MobsListMenu(storage).openMenu();
 		}
 	}
 
@@ -68,7 +77,7 @@ public class ConfirmMenu extends MenuManager {
 				setInvItem(Material.REDSTONE_TORCH, 10, "&a+10", null, 16);
 				setInvItem(Material.REDSTONE_TORCH, 64, "&a64", null, 17);
 				break;
-			case MODIFICATION :
+			default :
 				break;
 		}
 	}

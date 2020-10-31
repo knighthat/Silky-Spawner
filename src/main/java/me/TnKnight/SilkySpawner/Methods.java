@@ -12,9 +12,11 @@ public class Methods {
 
 	protected ItemStack setItem(ItemStack item, String name, List<String> lore, EntityType spawnType) {
 		BlockStateMeta bMeta = (BlockStateMeta) item.getItemMeta();
-		CreatureSpawner cSpawner = (CreatureSpawner) bMeta.getBlockState();
-		cSpawner.setSpawnedType(spawnType);
-		bMeta.setBlockState(cSpawner);
+		if (spawnType != null) {
+			CreatureSpawner cSpawner = (CreatureSpawner) bMeta.getBlockState();
+			cSpawner.setSpawnedType(spawnType);
+			bMeta.setBlockState(cSpawner);
+		}
 		bMeta.setDisplayName(name == null ? null : Utils.AddColors(name));
 		if (lore != null)
 			if (bMeta.hasLore()) {

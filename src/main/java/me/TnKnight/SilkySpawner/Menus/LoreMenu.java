@@ -6,6 +6,11 @@ import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import me.TnKnight.SilkySpawner.Utils;
+import me.TnKnight.SilkySpawner.Menus.MenusStorage.ConfirmType;
 
 public class LoreMenu extends MenuManager {
 
@@ -43,21 +48,33 @@ public class LoreMenu extends MenuManager {
 	public void itemClicked(InventoryClickEvent e) {
 		Player player = (Player) e.getWhoClicked();
 		int slot = e.getSlot();
-		if (slot == 8) {
-			new MainMenu(new MenusStorage(player)).openMenu();
-			return;
+		switch (slot) {
+			case 8 :
+				new MainMenu(new MenusStorage(player)).openMenu();
+				break;
+			default :
+				if (!permConfirm(player, "menu.lore." + commands.get(slot).toLowerCase()) && !permConfirm(player, "menu.*")
+				    && !permConfirm(player, "menu.lore." + "*"))
+					return;
+				if (slot != 0) {
+					ItemStack ItemLine = new ItemStack(Material.PAPER);
+					ItemMeta lMeta = ItemLine.getItemMeta();
+					lMeta.setDisplayName(Utils.AddColors(getInv("LineListMenu.LineNumber").replace("%line%", "1")));
+					ItemLine.setItemMeta(lMeta);
+					storage.setSpawner(ItemLine);
+					storage.setType(ConfirmType.valueOf(commands.get(slot).toUpperCase().concat("_LORE")));
+					new LineListMenu(storage).openMenu();
+				} else
+					accessModification(player, false, ConfirmType.ADD_LORE);
+				break;
 		}
-		String perm = "menu.lore.";
-		if (!permConfirm(player, perm + commands.get(slot).toLowerCase()) && !permConfirm(player, "menu.*") && !permConfirm(player, perm + "*"))
-			return;
-		String function = "lore " + commands.get(slot).concat(slot > 0 ? " [line]" : "").concat(" <lore>");
-		sendMes(player, function, function.replace("[line] ", "").replace("<lore>", ""));
 	}
 
 	@Override
 	public void setMenuItems() {
 		for (int slot : items.keySet())
-			setInvItem(items.get(slot), 1, getInv("LoreModificatiorMenu." + commands.get(slot) + ".Button"), null, slot);
+			setInvItem(items.get(slot), 1,
+			    getInv("LoreModificatiorMenu." + commands.get(slot) + (!commands.get(slot).equals("GoBack") ? "Lore" : "") + "Button"), null, slot);
 
 	}
 

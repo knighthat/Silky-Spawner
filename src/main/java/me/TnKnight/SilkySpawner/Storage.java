@@ -63,11 +63,11 @@ public class Storage extends Methods {
 		player.sendMessage(" ");
 	}
 	protected boolean permConfirm(CommandSender player, String perm) {
-		perm = "silkyspawner." + perm;
-		if (player.hasPermission(perm) || player.hasPermission(allPerm)
+		if (player.hasPermission("silkyspawner." + perm) || player.hasPermission(allPerm)
 		    || (perm.startsWith("silkyspawer.command.") && player.hasPermission("silkyspawner.command.*")))
 			return true;
-		player.sendMessage(noPerm(perm));
+		if (!perm.endsWith(".*"))
+			player.sendMessage(Utils.AddColors(noPerm(perm)));
 		return false;
 	}
 	protected String noPerm(String perm) {

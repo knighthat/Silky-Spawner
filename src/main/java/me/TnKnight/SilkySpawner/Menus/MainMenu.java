@@ -10,10 +10,12 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import me.TnKnight.SilkySpawner.Utils;
 import me.TnKnight.SilkySpawner.Files.InvConfiguration;
 import me.TnKnight.SilkySpawner.Files.Message;
+import me.TnKnight.SilkySpawner.Menus.MenusStorage.ConfirmType;
 
 public class MainMenu extends MenuManager {
 
@@ -56,22 +58,33 @@ public class MainMenu extends MenuManager {
 						player.sendMessage(getMsg("CloseMenu"));
 					player.closeInventory();
 					return;
-				} else if (player.hasPermission("silkyspawner.menu." + items.get(material)) || player.hasPermission(allPerm)
-				    || player.hasPermission("silkyspawner.menu.*")) {
+				} else if (permConfirm(player, "menu.*") || permConfirm(player, "menu." + items.get(material) + ".*")
+				    || permConfirm(player, "menu." + items.get(material))) {
 					String key = items.get(material);
-					if (material.equals(Material.NAME_TAG) || material.equals(Material.ARMOR_STAND)) {
-						sendMes(player, key + (key.equalsIgnoreCase("setname") ? " <name>" : " [radius]"), key);
-						player.closeInventory();
-					} else if (material.equals(Material.PAPER)) {
-						new LoreMenu(storage).openMenu();
-					} else if (material.equals(Material.SPAWNER)) {
-						new MobsListMenu(storage).openMenu();
-					} else {
-						player.performCommand("silkyspawner " + key);
-						player.closeInventory();
+					switch (e.getSlot()) {
+						case 1 :
+							new MobsListMenu(storage).openMenu();
+							break;
+						case 2 :
+							accessModification(player, true, ConfirmType.NAME);
+							break;
+						case 3 :
+							new LoreMenu(storage).openMenu();
+							break;
+						case 5 :
+							ItemStack astand = new ItemStack(Material.ARMOR_STAND);
+							ItemMeta aMeta = astand.getItemMeta();
+							aMeta.setDisplayName(Utils.AddColors(getInv("RemoveMenu.RadiusDisplay").replace("%radius%", "1")));
+							astand.setItemMeta(aMeta);
+							storage.setSpawner(astand);
+							new RemoveArmorsStandsMenu(storage).openMenu();
+							break;
+						default :
+							player.performCommand("silkyspawner " + key);
+							player.closeInventory();
+							break;
 					}
-				} else
-					player.sendMessage(getMsg("NoPerm").replace("%perm%", "silkyspawner.menu." + items.get(material)));
+				}
 	}
 
 	@Override

@@ -39,7 +39,7 @@ public class CreateSpawnerCommand extends CommandsAbstractClass {
 				return;
 			player.spigot().sendMessage(this.getMobsList());
 		} else if (args.length == 1 || args.length == 2) {
-			if (MobsList.toList().contains(args[0].toUpperCase())) {
+			if (!MobsList.toList().contains(args[0].toUpperCase())) {
 				player.spigot().sendMessage(this.getMobsList());
 				return;
 			}

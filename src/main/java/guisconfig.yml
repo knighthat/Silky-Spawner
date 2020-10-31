@@ -88,6 +88,22 @@ LoreModificatiorMenu:
   InsertLoreButton: "&9Insert lore"
   RemoveLoreButton: "&cRemove lore"
   GoBackButton: "&eGo back"
+  
+  
+#########################################
+#                                       #
+#            LINES LIST MENU            #
+#                                       #
+# Please, DO NOT change anything before #
+#       ":" or you will get errors      #
+#                                       #
+#########################################
+
+LinesListMenu:
+  Title: "Choose a line"
+  LineNumber: "&eLine#: &6&l%line%"
+  YesButton: "&aYes"
+  NoButton: "&cNo"
 
     
 #########################################

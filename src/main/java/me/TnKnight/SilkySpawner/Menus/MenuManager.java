@@ -7,15 +7,19 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import me.TnKnight.SilkySpawner.SilkySpawner;
 import me.TnKnight.SilkySpawner.Storage;
 import me.TnKnight.SilkySpawner.Utils;
 import me.TnKnight.SilkySpawner.Files.InvConfiguration;
+import me.TnKnight.SilkySpawner.Files.Message;
+import me.TnKnight.SilkySpawner.Menus.MenusStorage.ConfirmType;
 
 public abstract class MenuManager extends Storage implements InventoryHolder {
 
@@ -57,5 +61,18 @@ public abstract class MenuManager extends Storage implements InventoryHolder {
 	}
 	protected boolean contains(String material) {
 		return Arrays.stream(Material.values()).map(Material::name).collect(Collectors.toList()).contains(material.toUpperCase());
+	}
+	protected void accessModification(Player player, boolean type, ConfirmType cType) {
+		if (!player.getInventory().getItemInMainHand().getType().equals(Material.SPAWNER)) {
+			player.sendMessage(getMsg("NotHoldingSpawner"));
+			return;
+		}
+		player.sendMessage(
+		    getMsg(type ? "SetName" : "SetLore").replace("%min%", ValidateCfg("MinimumChars")).replace("%max%", ValidateCfg("MaximumChars")));
+		player.sendMessage(Utils.AddColors(Message.getConfig().getString("RequestCancel").replace("%request%", ValidateCfg("CancelRequest"))));
+		SilkySpawner.getStorage(player).setType(cType);
+		SilkySpawner.getStorage(player).setBolean(true);
+		SilkySpawner.getStorage(player).setSpawner(player.getInventory().getItemInMainHand());
+		player.closeInventory();
 	}
 }

@@ -2,9 +2,9 @@ package me.TnKnight.SilkySpawner.Commands;
 
 import org.bukkit.entity.Player;
 
+import me.TnKnight.SilkySpawner.SilkySpawner;
 import me.TnKnight.SilkySpawner.Files.Config;
 import me.TnKnight.SilkySpawner.Menus.MainMenu;
-import me.TnKnight.SilkySpawner.Menus.MenusStorage;
 
 public class GUICommand extends CommandsAbstractClass {
 
@@ -27,7 +27,7 @@ public class GUICommand extends CommandsAbstractClass {
 	public void executeCommand(Player player, String[] args) {
 		switch (args.length) {
 			case 0 :
-				new MainMenu(new MenusStorage(player)).openMenu();
+				new MainMenu(SilkySpawner.getStorage(player)).openMenu();
 				break;
 			default :
 				player.spigot().sendMessage(cBuilder(getUsage()).create());

@@ -5,7 +5,7 @@
 # Please, DO NOT change anything in version section #
 #                                                   #
 #####################################################
-version: 0.1.3
+version: 0.2.0
 auto-check: true
 
 
@@ -51,6 +51,11 @@ TypeOfCreature: "&cCreature: &6&l%creature_type%"
 #If true, you can change the message in the message.yml file
 CustomEnchantment: true
 EnchantmentName: "Spawner Picker"
+
+
+#Name and lore modification will be cancelled if players type this in their chat
+CancelRequest: "!cancel"
+
 
 #For more color codes. Visit this website: https://www.colorschemer.com/minecraft-color-codes/
 HelpCommand:

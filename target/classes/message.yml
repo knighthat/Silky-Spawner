@@ -9,7 +9,6 @@ PlaceSpawner: "&2You just placed a spawner named %name%"
 RemoveArmorStandsMessage: "&9All custom ArmorStands have been removed within %radius% blocks."
 
 
-
 #########################################
 #                                       #
 #             ERROR MESSAGE             #
@@ -58,5 +57,7 @@ CloseMenu: "&cMenu Closed!"
 GetSpawner: "&dEnjoy your spawner!"
 OnFirstPage: "&cYou are on the very first page!"
 OnLastPage: "&cNo more pages for you to go through :("
-RequestCancel: "&eTips: Type %cancel_cmd% to cancel the modification."
+SetName: "&7Name your spawner (&6%min% &7- &6%max% &7chars.)"
+SetLore: "&7Write down a line of lore (&6%min% &7- &6%max% &7chars.)"
+RequestCancel: "&eTips: Type %request% to cancel the modification."
 Cancelled: "&cYou cancelled it!"

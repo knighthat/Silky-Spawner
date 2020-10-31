@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -13,11 +14,13 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -28,6 +31,10 @@ import me.TnKnight.SilkySpawner.SilkySpawner;
 import me.TnKnight.SilkySpawner.Storage;
 import me.TnKnight.SilkySpawner.Utils;
 import me.TnKnight.SilkySpawner.Files.Config;
+import me.TnKnight.SilkySpawner.Files.Message;
+import me.TnKnight.SilkySpawner.Menus.ConfirmMenu;
+import me.TnKnight.SilkySpawner.Menus.MenusStorage;
+import me.TnKnight.SilkySpawner.Menus.MenusStorage.ConfirmType;
 
 public class Spawners extends Storage implements Listener {
 
@@ -114,5 +121,78 @@ public class Spawners extends Storage implements Listener {
 			for (int i = 0; i < iMeta.getLore().size() - 1; i++)
 				spawnAS(bSpawner, iMeta.getLore().get(i), distance - (space * (i + 1)));
 		e.getPlayer().sendMessage(getMsg("PlaceSpawner").replace("%name%", iMeta.getDisplayName()));
+	}
+
+	@EventHandler
+	public void asyncChat(AsyncPlayerChatEvent e) {
+		Player player = e.getPlayer();
+		String message = e.getMessage();
+		MenusStorage storage = SilkySpawner.getStorage(player);
+		if (storage.getBolean()) {
+			e.setCancelled(true);
+			if (message.startsWith(ValidateCfg("CancelRequest"))) {
+				player.sendMessage(getMsg("Cancelled"));
+				storage.setBolean(false);
+				return;
+			}
+			ItemStack spawner = new ItemStack(Material.SPAWNER);
+			spawner.setItemMeta(storage.getSpawner().getItemMeta());
+			ItemMeta sMeta = spawner.getItemMeta();
+			List<String> lore = sMeta.getLore();
+			lore.remove(sMeta.getLore().size() - 1);
+			switch (storage.getType()) {
+				case NAME :
+					if (!charsCount(player, message, "Name"))
+						return;
+					sMeta.setDisplayName(Utils.AddColors(message));
+					break;
+				case ADD_LORE :
+					if (!charsCount(player, message, "Lore"))
+						return;
+					lore.add(Utils.AddColors(message));
+					break;
+				case INSERT_LORE :
+					if (!charsCount(player, message, "Lore"))
+						return;
+					List<String> nLore = new ArrayList<>();
+					for (int i = 0; i < lore.size(); i++) {
+						nLore.add(lore.get(i));
+						if (lore.get(storage.getLine()).equals(lore.get(i)))
+							nLore.add(Utils.AddColors(message));
+					}
+					lore.clear();
+					lore = nLore;
+					break;
+				case SET_LORE :
+					if (!charsCount(player, message, "Lore"))
+						return;
+					lore.set(storage.getLine(), Utils.AddColors(message));
+					break;
+				default :
+					break;
+			}
+			if (!storage.getType().equals(ConfirmType.CREATE) && !storage.getType().equals(ConfirmType.NAME)) {
+				lore.add(sMeta.getLore().get(sMeta.getLore().size() - 1));
+				sMeta.setLore(lore);
+			}
+			storage.setBolean(false);
+			spawner.setItemMeta(sMeta);
+			storage.setSpawner(spawner);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(SilkySpawner.instance, new Runnable() {
+				@Override
+				public void run() {
+					new ConfirmMenu(storage).openMenu();
+				}
+			}, 5L);
+		}
+	}
+
+	private boolean charsCount(Player player, String message, String type) {
+		if (!Utils.charsCounting(player, message, "Name")) {
+			player.sendMessage(getMsg("Set" + type).replace("%min%", ValidateCfg("MinimumChars")).replace("%max%", ValidateCfg("MaximumChars")));
+			player.sendMessage(Utils.AddColors(Message.getConfig().getString("RequestCancel").replace("%request%", ValidateCfg("CancelRequest"))));
+			return false;
+		}
+		return true;
 	}
 }
