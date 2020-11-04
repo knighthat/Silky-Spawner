@@ -1,5 +1,22 @@
 #########################################
 #                                       #
+#                BUTTONS                #
+#                                       #
+# Please, DO NOT change anything before #
+#       ":" or you will get errors      #
+#                                       #
+#########################################
+
+YesButton: "&aYes"
+NoButton: "&cNo"
+NextPageButton: "&7Next page"
+PreviousPageButton: "&7Previous Page" 
+GoBackButton: "&eGo back"
+CloseButton: "&c&lClose Menu"
+
+
+#########################################
+#                                       #
 #               MAIN MENU               #
 #                                       #
 # Please, DO NOT change anything before #
@@ -52,7 +69,6 @@ MainMenu:
       - ""
       - "&8List all the available commands"
       - ""
-  Close: "&c&lClose Menu"
     
  
 #########################################
@@ -67,9 +83,6 @@ MainMenu:
 CreateSpawnerMenu:
   Title: "&a&lCreate &b&lCustom &e&lSpawner &f- &8Page %page%"
   Fill: BLUE_STAINED_GLASS_PANE
-  PreviousPage: "Previous Page"
-  NextPage: "Next Page"
-  GoBackButton:  "&eGo back"
   
 
 #########################################
@@ -87,40 +100,23 @@ LoreModificatiorMenu:
   SetLoreButton: "&bSet lore"
   InsertLoreButton: "&9Insert lore"
   RemoveLoreButton: "&cRemove lore"
-  GoBackButton: "&eGo back"
   
   
 #########################################
 #                                       #
-#            LINES LIST MENU            #
+#       LINE/RANGE CHOOSING MENU       #
 #                                       #
 # Please, DO NOT change anything before #
 #       ":" or you will get errors      #
 #                                       #
 #########################################
+LineRangeMenu:
+  LineTitle: "&aChoose a line to continue"
+  LineDisplay: "&eLine#: &6%line%"
+  RangeTitle: "&cDefine a range to clear"
+  RangeDisplay: "&eRadius: &6%radius%" 
+  FillItem: WHITE_STAINED_GLASS_PANE
 
-LinesListMenu:
-  Title: "Choose a line"
-  LineNumber: "&eLine#: &6&l%line%"
-  YesButton: "&aYes"
-  NoButton: "&cNo"
-
-    
-#########################################
-#                                       #
-#   REMOVE FLOATING NAME & LORE MENU    #
-#                                       #
-# Please, DO NOT change anything before #
-#       ":" or you will get errors      #
-#                                       #
-#########################################
-
-RemoveMenu:
-  Title: "&b&lHow far should we clear it?"
-  YesButton: "&aStart"
-  CancelButton: "&cCancel"
-  RadiusDisplay: "&6Range: &e&l%radius%"
-  
 
 #########################################
 #                                       #
@@ -134,6 +130,3 @@ RemoveMenu:
 ConfirmMenu:
   Title: "&a&lConfirm Menu"
   Fill: AIR
-  YesButton: "&aYes"
-  NoButton: "&cNo"
-  

@@ -36,6 +36,7 @@ public abstract class MenuManager extends Storage implements InventoryHolder {
 	public abstract void setMenuItems();
 
 	public void openMenu() {
+		storage = SilkySpawner.getStorage(storage.getPlayer());
 		inventory = Bukkit.createInventory(this, getRows() * 9, Utils.AddColors(getMenuName()));
 		this.setMenuItems();
 		storage.getPlayer().openInventory(inventory);
@@ -70,9 +71,22 @@ public abstract class MenuManager extends Storage implements InventoryHolder {
 		player.sendMessage(
 		    getMsg(type ? "SetName" : "SetLore").replace("%min%", ValidateCfg("MinimumChars")).replace("%max%", ValidateCfg("MaximumChars")));
 		player.sendMessage(Utils.AddColors(Message.getConfig().getString("RequestCancel").replace("%request%", ValidateCfg("CancelRequest"))));
-		SilkySpawner.getStorage(player).setType(cType);
-		SilkySpawner.getStorage(player).setBolean(true);
-		SilkySpawner.getStorage(player).setSpawner(player.getInventory().getItemInMainHand());
+		storage.setType(cType);
+		storage.setBolean(true);
+		storage.setSpawner(player.getInventory().getItemInMainHand());
 		player.closeInventory();
+	}
+	protected void YesNoButton(int yesSlot, int noSlot) {
+		for (int slot : Arrays.asList(yesSlot, noSlot))
+			setInvItem(Material.getMaterial(slot == yesSlot ? "LIME_WOOL" : "RED_WOOL"), 1, getInv(slot == yesSlot ? "YesButton" : "NoButton"), null,
+			    slot);
+	}
+	protected void ChangePageButton(int preButton, int nextButton, int goBackButton) {
+		for (int slot : Arrays.asList(preButton, nextButton))
+			setInvItem(Material.DARK_OAK_BUTTON, 1, getInv(slot == preButton ? "NextPageButton" : "PreviousPageButton"), null, slot);
+		GoBackButton(goBackButton);
+	}
+	protected void GoBackButton(int slot) {
+		setInvItem(Material.REDSTONE, 1, getInv("GoBackButton"), null, slot);
 	}
 }

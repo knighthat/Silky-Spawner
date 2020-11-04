@@ -31,12 +31,11 @@ public class Interaction extends Storage implements Listener {
 	@EventHandler
 	public void MenuClicked(InventoryClickEvent e) {
 		if (e.getView().getTopInventory().getHolder() instanceof MenuManager)
-			if (e.getCurrentItem() != null && !e.getCurrentItem().getType().equals(Material.AIR)
-			    && !(e.getClickedInventory().getHolder() instanceof Player)) {
-				e.setCancelled(true);
-				MenuManager menu = (MenuManager) e.getClickedInventory().getHolder();
-				menu.itemClicked(e);
-			}
+			e.setCancelled(true);
+		if (e.getCurrentItem() == null || e.getCurrentItem().getType().equals(Material.AIR) || e.getClickedInventory().getHolder() instanceof Player)
+			return;
+		MenuManager menu = (MenuManager) e.getClickedInventory().getHolder();
+		menu.itemClicked(e);
 	}
 
 	@EventHandler

@@ -12,10 +12,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import me.TnKnight.SilkySpawner.Methods;
 import me.TnKnight.SilkySpawner.MobsList;
 import me.TnKnight.SilkySpawner.Utils;
 import me.TnKnight.SilkySpawner.Files.Config;
-import me.TnKnight.SilkySpawner.Files.InvConfiguration;
 import me.TnKnight.SilkySpawner.Menus.MenusStorage.ConfirmType;
 
 public class MobsListMenu extends AbstractMobsListMenu {
@@ -44,6 +44,10 @@ public class MobsListMenu extends AbstractMobsListMenu {
 			    .replace(Utils.AddColors(ValidateCfg("TypeOfCreature").replace("%creature_type%", "")), ""));
 			if (!permConfirm(player, perm + namePerm.toLowerCase()) && !permConfirm(player, "menu.*") && !permConfirm(player, perm + "*"))
 				return;
+			if (player.getInventory().firstEmpty() < 1) {
+				player.sendMessage(getMsg("LackOfSpace"));
+				return;
+			}
 			storage.setType(ConfirmType.CREATE);
 			ItemMeta sMeta = e.getCurrentItem().getItemMeta();
 			String lore = Utils.AddColors(Config.getConfig().getString("TypeOfCreature").replace("%creature_type%",
@@ -76,13 +80,18 @@ public class MobsListMenu extends AbstractMobsListMenu {
 
 	@Override
 	public void setMenuItems() {
-		fillItem();
+		Material material = Material.getMaterial(Utils.ItemsChecking(getInv("CreateSpawnerMenu.Fill")) ? getInv("CreateSpawnerMenu.Fill") : "AIR");
+		for (int rows = 0; rows < 6; rows++)
+			for (int slot = rows * 9; slot < rows * 9 + 9; slot++)
+				if (rows == 0 || rows == 5 || ((rows > 0 && rows < 5) && (rows * 9 == slot || slot == rows * 9 + 8)))
+					setInvItem(material, 1, " ", null, slot);
+		ChangePageButton(48, 50, 49);
 		for (int slot = 0; slot < itemsPerPage; slot++) {
 			index = itemsPerPage * page + slot;
 			if (index >= MobsList.toList().size())
 				break;
 			final String name = ValidateCfg("TypeOfCreature").replace("%creature_type%", MobsList.getMobName(MobsList.toList().get(index)));
-			inventory.addItem(setItem(new ItemStack(Material.SPAWNER), name, null, EntityType.valueOf(MobsList.toList().get(index))));
+			inventory.addItem(Methods.setItem(new ItemStack(Material.SPAWNER), name, null, EntityType.valueOf(MobsList.toList().get(index))));
 		}
 	}
 }
@@ -95,24 +104,4 @@ abstract class AbstractMobsListMenu extends MenuManager {
 	protected int page = 0;
 	protected int itemsPerPage = 28;
 	protected int index = 0;
-	public void fillItem() {
-		ItemStack filler = new ItemStack(Material.getMaterial(contains(getInv("CreateSpawnerMenu.Fill")) ? getInv("CreateSpawnerMenu.Fill") : "AIR"));
-		ItemMeta fMeta = filler.getItemMeta();
-		fMeta.setDisplayName(" ");
-		filler.setItemMeta(fMeta);
-		for (int rows = 0; rows < 6; rows++)
-			for (int slot = rows * 9; slot < rows * 9 + 9; slot++)
-				if (rows == 0 || rows == 5 || ((rows > 0 && rows < 5) && (rows * 9 == slot || slot == rows * 9 + 8)))
-					inventory.setItem(slot, filler);
-		addItem(Material.DARK_OAK_BUTTON, "CreateSpawnerMenu.PreviousPage", 48);
-		addItem(Material.REDSTONE, "CreateSpawnerMenu.GoBackButton", 49);
-		addItem(Material.DARK_OAK_BUTTON, "CreateSpawnerMenu.NextPage", 50);
-	}
-	private void addItem(Material material, String path, int slot) {
-		ItemStack button = new ItemStack(material);
-		ItemMeta meta = button.getItemMeta();
-		meta.setDisplayName(Utils.AddColors(InvConfiguration.getConfig().getString(path)));
-		button.setItemMeta(meta);
-		inventory.setItem(slot, button);
-	}
 }

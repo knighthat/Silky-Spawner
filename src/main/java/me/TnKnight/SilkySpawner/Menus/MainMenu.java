@@ -10,9 +10,10 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
+import me.TnKnight.SilkySpawner.CustomEnchantment;
 import me.TnKnight.SilkySpawner.Utils;
+import me.TnKnight.SilkySpawner.Files.Config;
 import me.TnKnight.SilkySpawner.Files.InvConfiguration;
 import me.TnKnight.SilkySpawner.Files.Message;
 import me.TnKnight.SilkySpawner.Menus.MenusStorage.ConfirmType;
@@ -61,6 +62,11 @@ public class MainMenu extends MenuManager {
 				} else if (permConfirm(player, "menu.*") || permConfirm(player, "menu." + items.get(material) + ".*")
 				    || permConfirm(player, "menu." + items.get(material))) {
 					String key = items.get(material);
+					if (e.getSlot() == 2 || e.getSlot() == 3)
+						if (!player.getInventory().getItemInMainHand().getType().equals(Material.SPAWNER)) {
+							player.sendMessage(getMsg("NotHoldingSpawner").replace("%type%", ValidateCfg(e.getSlot() == 2 ? "Name" : "Lore")));
+							return;
+						}
 					switch (e.getSlot()) {
 						case 1 :
 							new MobsListMenu(storage).openMenu();
@@ -71,13 +77,29 @@ public class MainMenu extends MenuManager {
 						case 3 :
 							new LoreMenu(storage).openMenu();
 							break;
+						case 4 :
+							if (!Config.getConfig().getBoolean("CustomEnchantment")) {
+								player.sendMessage(getMsg("CETurnedOff"));
+								return;
+							}
+							ItemStack inHand = new ItemStack(player.getInventory().getItemInMainHand());
+							if (!inHand.getType().name().endsWith("_PICKAXE")) {
+								player.sendMessage(getMsg("NotHoldingPickaxe"));
+								return;
+							}
+							if (inHand.containsEnchantment(CustomEnchantment.PICKDASPAWNER)) {
+								player.sendMessage(getMsg("AlreadyAdded"));
+								return;
+							}
+							CustomEnchantment.enchantItem(inHand);
+							storage.setType(ConfirmType.CONFIRM_ITEM);
+							storage.setSpawner(inHand);
+							new ConfirmMenu(storage).openMenu();
+							break;
 						case 5 :
-							ItemStack astand = new ItemStack(Material.ARMOR_STAND);
-							ItemMeta aMeta = astand.getItemMeta();
-							aMeta.setDisplayName(Utils.AddColors(getInv("RemoveMenu.RadiusDisplay").replace("%radius%", "1")));
-							astand.setItemMeta(aMeta);
-							storage.setSpawner(astand);
-							new RemoveArmorsStandsMenu(storage).openMenu();
+							storage.setLine(1);
+							storage.setType(ConfirmType.REMOVE_ARMORSTANDS);
+							new ConfirmMenu(storage).openMenu();
 							break;
 						default :
 							player.performCommand("silkyspawner " + key);
@@ -102,6 +124,6 @@ public class MainMenu extends MenuManager {
 			    .stream().map(string -> Utils.AddColors(string)).collect(Collectors.toList()) : new ArrayList<String>();
 			setInvItem(item, 1, getInv(path + "Name"), lore, slot++);
 		}
-		setInvItem(Material.BARRIER, 1, getInv("MainMenu.Close"), null, 13);
+		setInvItem(Material.BARRIER, 1, getInv("CloseButton"), null, 13);
 	}
 }

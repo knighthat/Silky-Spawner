@@ -1,15 +1,21 @@
 package me.TnKnight.SilkySpawner;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import net.md_5.bungee.api.ChatColor;
 
 public class CustomEnchantment {
 	public static final Enchantment PICKDASPAWNER = new BaseCustomEnchant("spawner_picker");
@@ -19,8 +25,7 @@ public class CustomEnchantment {
 		boolean registered = Arrays.stream(Enchantment.values()).collect(Collectors.toList()).contains(PICKDASPAWNER);
 		if (!registered)
 			registerEnchantment(PICKDASPAWNER);
-		SilkySpawner.instance.getServer().getConsoleSender()
-		    .sendMessage(Utils.AddColors(SilkySpawner.getName + "Custom Enchanment successfully registered!"));
+		SilkySpawner.sendMes("Custom Enchanment successfully registered!", Level.INFO, true);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -42,7 +47,19 @@ public class CustomEnchantment {
 			field.set(null, true);
 			Enchantment.registerEnchantment(ench);
 		} catch (Exception e) {
+			SilkySpawner.sendMes("Failed in enabling Custom Enchantment! Please restart the server.", Level.SEVERE, true);
+			SilkySpawner.sendMes("Report this error if you received this message after resrarting!", Level.SEVERE, false);
 		}
+	}
+
+	public static void enchantItem(ItemStack item) {
+		ItemMeta iMeta = item.getItemMeta();
+		List<String> lore = new ArrayList<>(Arrays.asList(ChatColor.GRAY + Utils.StripColors(Storage.ValidateCfg("EnchantmentName")), " "));
+		if (iMeta.hasLore())
+			lore.addAll(iMeta.getLore());
+		iMeta.setLore(lore);
+		item.setItemMeta(iMeta);
+		item.addEnchantment(PICKDASPAWNER, 1);
 	}
 }
 

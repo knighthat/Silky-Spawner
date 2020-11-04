@@ -11,7 +11,7 @@ import me.TnKnight.SilkySpawner.Files.Message;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 
-public class Storage extends Methods {
+public class Storage {
 
 	protected static final String nll = " can't be null, please double check!";
 	protected final String allPerm = "silkyspawner.*";

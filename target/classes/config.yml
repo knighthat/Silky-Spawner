@@ -5,7 +5,7 @@
 # Please, DO NOT change anything in version section #
 #                                                   #
 #####################################################
-version: 0.2.0
+version: 0.2.1
 auto-check: true
 
 

@@ -41,7 +41,7 @@ public class Utils extends Storage {
 
 	public static boolean charsCounting(Player player, String input, String Type) {
 		input = Config.getConfig().getBoolean("CountTheCodes") ? input : StripColors(input);
-		String type = Config.getConfig().getString(Type);
+		String type = ValidateCfg(Type);
 		int Minimum = Config.getConfig().getInt("MinimumChars");
 		int Maximum = Config.getConfig().getInt("MaximumChars");
 		int count = 0;

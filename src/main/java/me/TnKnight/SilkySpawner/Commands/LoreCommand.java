@@ -46,6 +46,10 @@ public class LoreCommand extends CommandsAbstractClass {
 			this.sendMes(player, args[0]);
 			return;
 		}
+		if (!args[0].equalsIgnoreCase("add") && !player.getInventory().getItemInMainHand().getItemMeta().hasLore()) {
+			player.sendMessage(getMsg("NoLore"));
+			return;
+		}
 		String input = Utils.AddColors(Utils.arrayToString(args, args[0].equalsIgnoreCase("add") ? 1 : 2));
 		if (!args[0].equalsIgnoreCase("remove")) {
 			if (!mConfirm(player, "SPAWNER", "Lore"))

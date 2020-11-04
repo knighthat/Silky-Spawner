@@ -34,6 +34,8 @@ NotHoldingSpawner: "&9You must hold your spawner in main han in order to modify 
 CannotChangeMob: "&3Spawner can't spawn %mob_type%"
 MobChanged: "&bThis spawner is now spawning %mob_type%"
 SameMob: "&aThis spawner is containing %mob_type%"
+NoLore: "&dYour spawner has no line to modify."
+
 
 ##########################################
 #                                        #
@@ -43,7 +45,7 @@ SameMob: "&aThis spawner is containing %mob_type%"
 
 CETurnedOff: "&cYou have to enable CustomEnchantment to use this command!"
 NotHoldingPickaxe: "&9You must hold your pickaxe in your main hand in order to add the enchantment."
-AlreadyAdded: "&cYour pickaxe already had this enchantment."
+AlreadyAdded: "&cYour pickaxe already has this enchantment."
 Success: "&2Enchantment added to your pickaxe successfully!"
 
 
@@ -61,3 +63,4 @@ SetName: "&7Name your spawner (&6%min% &7- &6%max% &7chars.)"
 SetLore: "&7Write down a line of lore (&6%min% &7- &6%max% &7chars.)"
 RequestCancel: "&eTips: Type %request% to cancel the modification."
 Cancelled: "&cYou cancelled it!"
+LackOfSpace: "&c&lYou don't have enough space to create new spawner!"

@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -34,8 +35,8 @@ public class SilkySpawner extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		instance = this;
-		getName = ChatColor.WHITE + "&7[" + instance.getDescription().getName() + "]&a ";
-		getServer().getConsoleSender().sendMessage(Utils.AddColors(getName + "Starting up, please wait..."));
+		getName = ChatColor.WHITE + "[" + instance.getDescription().getName() + "] ";
+		sendMes("Starting up, please wait...", Level.INFO, true);
 		Config.startup();
 		Message.startup();
 		InvConfiguration.startup();
@@ -48,13 +49,18 @@ public class SilkySpawner extends JavaPlugin {
 		configChecking();
 		if (Config.getConfig().getBoolean("auto-check"))
 			checkNewVersion();
-		getServer().getConsoleSender().sendMessage(Utils.AddColors(getName + "Plugin has been successfully loaded!"));
+		sendMes("Plugin has been successfully loaded!", Level.INFO, true);
 	}
 	@Override
 	public void onDisable() {
 		if (Config.getConfig().getBoolean("CustomEnchantment"))
 			CustomEnchantment.unRegister();
-		getServer().getConsoleSender().sendMessage(Utils.AddColors(getName + "All data saved, disabling plugin..."));
+		sendMes("All data saved, disabling plugin...", Level.INFO, true);
+	}
+
+	public static String sendMes(String msg, Level level, boolean prefix) {
+		instance.getServer().getLogger().log(level, Utils.StripColors((prefix ? getName : "") + msg));
+		return null;
 	}
 
 	private static final Map<Player, MenusStorage> storage = new HashMap<>();
@@ -73,7 +79,7 @@ public class SilkySpawner extends JavaPlugin {
 			return;
 		File newDest = new File(getDataFolder() + File.separator + "OldFiles");
 		newDest.mkdir();
-		getServer().getConsoleSender().sendMessage(Utils.AddColors(getName + "&cDefferent version detected! Started copying a new files.."));
+		getServer().getConsoleSender().sendMessage(Utils.AddColors(getName + "Defferent version detected! Backing up old files.."));
 		for (File f : Arrays.asList(Config.file, Message.file, InvConfiguration.file)) {
 			Path src = Paths.get(f.getAbsolutePath());
 			Path dest = Paths.get(newDest.getAbsolutePath() + File.separator + f.getName().concat(".old"));
@@ -82,9 +88,8 @@ public class SilkySpawner extends JavaPlugin {
 				f.delete();
 				saveResource(f.getName(), false);
 			} catch (IOException e) {
-				getServer().getConsoleSender()
-				    .sendMessage(Utils.AddColors(getName + "&4Error occurs when copying &f" + f.getName() + "&4. Please, delete or moving"));
-				getServer().getConsoleSender().sendMessage(Utils.AddColors("&4this file to other folder and let plugin create again"));
+				sendMes("Error occurs when trying to copy " + f.getName() + "! Please, delete or move", Level.SEVERE, true);
+				sendMes("" + f.getName() + " away and let plugin create again.", Level.SEVERE, false);
 			}
 		}
 		Config.reload();
@@ -93,7 +98,7 @@ public class SilkySpawner extends JavaPlugin {
 	}
 
 	private void checkNewVersion() {
-		getServer().getConsoleSender().sendMessage(Utils.AddColors(getName + "Checking for new version..."));
+		sendMes("Checking for new version...", Level.INFO, true);
 		try {
 			BufferedReader file = new BufferedReader(
 			    new InputStreamReader(new URL("https://raw.githubusercontent.com/knighthat/Silky-Spawner/master/plugin.yml").openStream()));
@@ -101,14 +106,13 @@ public class SilkySpawner extends JavaPlugin {
 			while ((str = file.readLine()) != null)
 				if (str.startsWith("version: "))
 					if (!str.replace("version:", "").trim().equals(getDescription().getVersion())) {
-						getServer().getConsoleSender().sendMessage(
-						    Utils.AddColors(getName + "&eA new version " + str.replace("version:", "").trim() + " is avaible. Please update!"));
+						sendMes("A new version " + str.replace("version:", "").trim() + " is avaible. Please update!", Level.WARNING, true);
 					} else
-						getServer().getConsoleSender().sendMessage(Utils.AddColors(getName + "You're on the lastest version!"));
+						sendMes("You're on the lastest version!", Level.INFO, true);
 
 			file.close();
 		} catch (IOException e) {
-			getServer().getConsoleSender().sendMessage(Utils.AddColors(getName + "&cChecking failed! Please report to my page ASAP."));
+			sendMes("Checking failed! Please report to my page ASAP.", Level.SEVERE, true);
 		}
 	}
 }

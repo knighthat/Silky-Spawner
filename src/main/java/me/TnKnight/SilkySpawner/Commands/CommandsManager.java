@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import org.bukkit.Material;
@@ -18,6 +19,7 @@ import org.bukkit.inventory.ItemStack;
 import me.TnKnight.SilkySpawner.MobsList;
 import me.TnKnight.SilkySpawner.SilkySpawner;
 import me.TnKnight.SilkySpawner.Storage;
+import me.TnKnight.SilkySpawner.Utils;
 import me.TnKnight.SilkySpawner.Files.Config;
 import me.TnKnight.SilkySpawner.Files.InvConfiguration;
 import me.TnKnight.SilkySpawner.Files.Message;
@@ -83,9 +85,10 @@ public class CommandsManager extends Storage implements CommandExecutor, TabComp
 					String StackStrace = String.valueOf(e.getStackTrace()[0]);
 					StackStrace = StackStrace.substring(StackStrace.lastIndexOf("(")).replace(")", "").replace("(", "").replace(".java", "")
 					    .concat(" -> " + e.getCause());
-					player.sendMessage(getMsg("Error").replace("%error%", StackStrace));
+					String errorCode = getMsg("Error").replace("%error%", StackStrace);
+					player.sendMessage(errorCode);
 					player.sendMessage(getMsg("ErrorMessage"));
-					e.printStackTrace();
+					SilkySpawner.sendMes(Utils.AddColors(errorCode), Level.SEVERE, true);
 				}
 			}
 		}
@@ -95,45 +98,51 @@ public class CommandsManager extends Storage implements CommandExecutor, TabComp
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 		List<String> results = new ArrayList<String>();
-		switch (args.length) {
-			case 1 :
-				for (String filter : Arg1)
-					if (filter.toLowerCase().startsWith(args[0].toLowerCase()))
-						results.add(filter);
-				break;
-			case 2 :
-				if (args[0].equalsIgnoreCase("lore"))
-					for (String filter : LoreCommand.command)
-						if (filter.toLowerCase().startsWith(args[1].toLowerCase()))
+		if (!(sender instanceof Player)) {
+			if (args.length == 1) {
+				results.add("reload");
+			} else
+				SilkySpawner.sendMes("&cConsole can only be able to execute \"reload\" command!", Level.SEVERE, true);
+		} else {
+			switch (args.length) {
+				case 1 :
+					for (String filter : Arg1)
+						if (filter.toLowerCase().startsWith(args[0].toLowerCase()))
 							results.add(filter);
-				if (args[0].equalsIgnoreCase("create"))
-					for (String filter : MobsList.toList())
-						if (filter.toLowerCase().startsWith(args[1].toLowerCase()))
-							results.add(filter);
-				if (args[0].equalsIgnoreCase("remove"))
-					for (String filter : nSuggestion)
-						if (filter.toLowerCase().startsWith(args[1].toLowerCase()))
-							results.add(filter);
-				break;
-			case 3 :
-				if (args[0].equalsIgnoreCase("create"))
-					for (String filter : nSuggestion)
-						if (filter.toLowerCase().startsWith(args[2].toLowerCase()))
-							results.add(filter);
-				if (sender instanceof Player && args[0].equalsIgnoreCase("lore") && !args[1].equalsIgnoreCase("add")
-				    && LoreCommand.command.contains(args[1].toLowerCase())) {
-					Player player = (Player) sender;
-					ItemStack item = player.getInventory().getItemInMainHand();
-					if (item.getType().equals(Material.SPAWNER) && item.getItemMeta().hasLore()) {
-						List<Integer> lore = new ArrayList<>();
-						for (int i = 0; i < item.getItemMeta().getLore().size() - 1; i++)
-							lore.add(i + 1);
-						for (int i : lore)
-							if (String.valueOf(i).startsWith(args[2]))
-								results.add(String.valueOf(i));
+					break;
+				case 2 :
+					if (args[0].equalsIgnoreCase("lore"))
+						for (String filter : LoreCommand.command)
+							if (filter.toLowerCase().startsWith(args[1].toLowerCase()))
+								results.add(filter);
+					if (args[0].equalsIgnoreCase("create"))
+						for (String filter : MobsList.toList())
+							if (filter.toLowerCase().startsWith(args[1].toLowerCase()))
+								results.add(filter);
+					if (args[0].equalsIgnoreCase("remove"))
+						for (String filter : nSuggestion)
+							if (filter.toLowerCase().startsWith(args[1].toLowerCase()))
+								results.add(filter);
+					break;
+				case 3 :
+					if (args[0].equalsIgnoreCase("create"))
+						for (String filter : nSuggestion)
+							if (filter.toLowerCase().startsWith(args[2].toLowerCase()))
+								results.add(filter);
+					if (args[0].equalsIgnoreCase("lore") && !args[1].equalsIgnoreCase("add") && LoreCommand.command.contains(args[1].toLowerCase())) {
+						Player player = (Player) sender;
+						ItemStack item = player.getInventory().getItemInMainHand();
+						if (item.getType().equals(Material.SPAWNER) && item.getItemMeta().hasLore()) {
+							List<Integer> lore = new ArrayList<>();
+							for (int i = 0; i < item.getItemMeta().getLore().size() - 1; i++)
+								lore.add(i + 1);
+							for (int i : lore)
+								if (String.valueOf(i).startsWith(args[2]))
+									results.add(String.valueOf(i));
+						}
 					}
-				}
-				break;
+					break;
+			}
 		}
 		Collections.sort(results);
 		return results;

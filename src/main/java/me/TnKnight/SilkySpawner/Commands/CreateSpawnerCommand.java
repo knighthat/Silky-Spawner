@@ -9,6 +9,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import me.TnKnight.SilkySpawner.Methods;
 import me.TnKnight.SilkySpawner.MobsList;
 import me.TnKnight.SilkySpawner.Utils;
 import me.TnKnight.SilkySpawner.Files.Config;
@@ -55,7 +56,7 @@ public class CreateSpawnerCommand extends CommandsAbstractClass {
 					player.sendMessage(getMsg("NotANumber").replace("%input%", args[1]));
 			final List<String> lore = new ArrayList<>(
 			    Arrays.asList(Config.getConfig().getString("TypeOfCreature").replace("%creature_type%", MobsList.getMobName(mob.name()))));
-			addItem(player, setItem(new ItemStack(Material.SPAWNER, amount), null, lore, mob));
+			Methods.addItem(player, Methods.setItem(new ItemStack(Material.SPAWNER, amount), null, lore, mob));
 		} else
 			player.spigot().sendMessage(cBuilder(getUsage()).create());
 	}

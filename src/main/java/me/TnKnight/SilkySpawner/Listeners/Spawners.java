@@ -26,6 +26,7 @@ import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.TnKnight.SilkySpawner.CustomEnchantment;
+import me.TnKnight.SilkySpawner.Methods;
 import me.TnKnight.SilkySpawner.MobsList;
 import me.TnKnight.SilkySpawner.SilkySpawner;
 import me.TnKnight.SilkySpawner.Storage;
@@ -58,11 +59,24 @@ public class Spawners extends Storage implements Listener {
 		as.setCustomNameVisible(true);
 	}
 
+	private Double getDistance() {
+		Double distance = Config.getConfig().getDouble("NameAndLore.Distance") + 1D;
+		if (distance < 0 || distance > 4D)
+			distance = distance < 0 ? 0 : 4D;
+		return distance;
+	}
+	private Double getSpace() {
+		Double space = Config.getConfig().getDouble("NameAndLore.Space");
+		if (space < 0 || space > 1D)
+			space = space < 0 ? 0 : 1D;
+		return space;
+	}
+
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onSpawnerBreak(BlockBreakEvent e) {
 		if (!e.getBlock().getType().equals(Material.SPAWNER))
 			return;
-		if (!e.getPlayer().getInventory().getItemInMainHand()
+		if (Config.getConfig().getBoolean("CustomEnchantment") && !e.getPlayer().getInventory().getItemInMainHand()
 		    .containsEnchantment(Config.getConfig().getBoolean("RequireEnchantment") ? CustomEnchantment.PICKDASPAWNER : Enchantment.SILK_TOUCH)) {
 			e.getPlayer().sendMessage(Utils.AddColors(Prefix() + ValidateCfg("BreakMessage")));;
 			e.setCancelled(true);
@@ -75,28 +89,26 @@ public class Spawners extends Storage implements Listener {
 		}
 		Block spawner = e.getBlock();
 		Location sLocation = spawner.getLocation();
-		List<Entity> Entities = new ArrayList<Entity>(
-		    spawner.getWorld().getNearbyEntities(sLocation.add(.5, 1D, .5), 0, 2D + Config.getConfig().getDouble("NameAndLore.Distance"), 0).stream()
-		        .filter(entity -> entity.getType().equals(EntityType.ARMOR_STAND)).filter(entity -> entity.getCustomName() != null)
-		        .filter(entity -> ((ArmorStand) entity).getHealth() == Serial).collect(Collectors.toList()));
+		Player player = e.getPlayer();
+		player.sendMessage("HI");
+		List<Entity> Entities = spawner.getWorld().getNearbyEntities(sLocation.add(.5, 1D, .5), 0, 2D + getDistance(), 0).stream()
+		    .filter(E -> E.getType().equals(EntityType.ARMOR_STAND) && E.getCustomName() != null && ((ArmorStand) E).getHealth() == Serial)
+		    .collect(Collectors.toList());
+		for (Entity entity : Entities)
+			player.sendMessage(entity.getCustomName());
 		ItemStack iSpawner = new ItemStack(Material.SPAWNER, 1);
+		String displayName = "";
 		EntityType creature = ((CreatureSpawner) spawner.getState()).getSpawnedType();
-		BlockStateMeta bMeta = (BlockStateMeta) iSpawner.getItemMeta();
-		CreatureSpawner cSpawner = (CreatureSpawner) bMeta.getBlockState();
-		cSpawner.setSpawnedType(creature);
-		bMeta.setBlockState(cSpawner);
 		List<String> lore = new ArrayList<String>();
 		if (Entities.size() > 0) {
-			bMeta.setDisplayName(Entities.get(0).getCustomName());
+			displayName = Entities.get(0).getCustomName();
 			for (int i = 1; i < Entities.size(); i++)
 				lore.add(Entities.get(i).getCustomName());
 		}
 		lore.add(Utils.AddColors(ValidateCfg("TypeOfCreature").replace("%creature_type%", MobsList.getMobName(creature.name()))));
-		bMeta.setLore(lore);
-		iSpawner.setItemMeta(bMeta);
+		Methods.setItem(iSpawner, displayName, lore, creature);
 		spawner.getWorld().dropItemNaturally(sLocation, iSpawner);
-		for (Entity entity : Entities)
-			entity.remove();
+		Entities.stream().forEach(E -> E.remove());
 	}
 
 	@EventHandler
@@ -110,16 +122,10 @@ public class Spawners extends Storage implements Listener {
 		}
 		ItemMeta iMeta = e.getItemInHand().getItemMeta();
 		Block bSpawner = e.getBlock();
-		Double space = Config.getConfig().getDouble("NameAndLore.Space");
-		if (space < 0 || space > 1D)
-			space = space < 0 ? 0 : 1D;
-		Double distance = Config.getConfig().getDouble("NameAndLore.Distance") + 1D;
-		if (distance < 0 || distance > 4D)
-			distance = distance < 0 ? 0 : 4D;
-		spawnAS(bSpawner, iMeta.getDisplayName(), distance);
+		spawnAS(bSpawner, iMeta.getDisplayName(), getDistance());
 		if (iMeta.hasLore())
 			for (int i = 0; i < iMeta.getLore().size() - 1; i++)
-				spawnAS(bSpawner, iMeta.getLore().get(i), distance - (space * (i + 1)));
+				spawnAS(bSpawner, iMeta.getLore().get(i), (getDistance() - .3) - (getSpace() * (i + 1)));
 		e.getPlayer().sendMessage(getMsg("PlaceSpawner").replace("%name%", iMeta.getDisplayName()));
 	}
 
@@ -135,49 +141,51 @@ public class Spawners extends Storage implements Listener {
 				storage.setBolean(false);
 				return;
 			}
+			if (!charsCount(player, message, storage.getType().equals(ConfirmType.NAME) ? "Name" : "Lore"))
+				return;
 			ItemStack spawner = new ItemStack(Material.SPAWNER);
 			spawner.setItemMeta(storage.getSpawner().getItemMeta());
 			ItemMeta sMeta = spawner.getItemMeta();
-			List<String> lore = sMeta.getLore();
-			lore.remove(sMeta.getLore().size() - 1);
+			List<String> lore = new ArrayList<>();
+			if (sMeta.hasLore()) {
+				lore = sMeta.getLore();
+				lore.remove(sMeta.getLore().size() - 1);
+			}
+			int line = storage.getLine() - 1;
 			switch (storage.getType()) {
 				case NAME :
-					if (!charsCount(player, message, "Name"))
-						return;
 					sMeta.setDisplayName(Utils.AddColors(message));
 					break;
 				case ADD_LORE :
-					if (!charsCount(player, message, "Lore"))
-						return;
 					lore.add(Utils.AddColors(message));
 					break;
 				case INSERT_LORE :
-					if (!charsCount(player, message, "Lore"))
-						return;
 					List<String> nLore = new ArrayList<>();
 					for (int i = 0; i < lore.size(); i++) {
 						nLore.add(lore.get(i));
-						if (lore.get(storage.getLine()).equals(lore.get(i)))
+						if (lore.get(line).equals(lore.get(i)))
 							nLore.add(Utils.AddColors(message));
 					}
 					lore.clear();
 					lore = nLore;
 					break;
 				case SET_LORE :
-					if (!charsCount(player, message, "Lore"))
-						return;
-					lore.set(storage.getLine(), Utils.AddColors(message));
+					lore.set(line, Utils.AddColors(message));
 					break;
 				default :
 					break;
 			}
 			if (!storage.getType().equals(ConfirmType.CREATE) && !storage.getType().equals(ConfirmType.NAME)) {
-				lore.add(sMeta.getLore().get(sMeta.getLore().size() - 1));
+				String nLore = sMeta.hasLore() ? sMeta.getLore().get(sMeta.getLore().size() - 1)
+				    : Utils.AddColors(ValidateCfg("TypeOfCreature").replace("%creature_type%",
+				        ((CreatureSpawner) ((BlockStateMeta) sMeta).getBlockState()).getSpawnedType().name()));
+				lore.add(nLore);
 				sMeta.setLore(lore);
 			}
-			storage.setBolean(false);
 			spawner.setItemMeta(sMeta);
+			storage.setBolean(false);
 			storage.setSpawner(spawner);
+			storage.setType(ConfirmType.CONFIRM_ITEM);
 			Bukkit.getScheduler().scheduleSyncDelayedTask(SilkySpawner.instance, new Runnable() {
 				@Override
 				public void run() {
@@ -188,11 +196,10 @@ public class Spawners extends Storage implements Listener {
 	}
 
 	private boolean charsCount(Player player, String message, String type) {
-		if (!Utils.charsCounting(player, message, "Name")) {
-			player.sendMessage(getMsg("Set" + type).replace("%min%", ValidateCfg("MinimumChars")).replace("%max%", ValidateCfg("MaximumChars")));
-			player.sendMessage(Utils.AddColors(Message.getConfig().getString("RequestCancel").replace("%request%", ValidateCfg("CancelRequest"))));
-			return false;
-		}
-		return true;
+		if (Utils.charsCounting(player, message, type))
+			return true;
+		player.sendMessage(getMsg("Set" + type).replace("%min%", ValidateCfg("MinimumChars")).replace("%max%", ValidateCfg("MaximumChars")));
+		player.sendMessage(Utils.AddColors(Message.getConfig().getString("RequestCancel").replace("%request%", ValidateCfg("CancelRequest"))));
+		return false;
 	}
 }
