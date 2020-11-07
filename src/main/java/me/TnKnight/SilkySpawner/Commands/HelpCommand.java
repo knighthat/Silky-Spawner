@@ -4,8 +4,7 @@ import java.util.Iterator;
 
 import org.bukkit.entity.Player;
 
-import me.TnKnight.SilkySpawner.Utils;
-import me.TnKnight.SilkySpawner.Files.Config;
+import Utilities.Utils;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -19,17 +18,17 @@ public class HelpCommand extends CommandsAbstractClass {
 
 	@Override
 	public String getDescription() {
-		return Config.getConfig().getString("CommandsAssistant." + getName() + ".Description");
+		return ValidateCfg("CommandsAssistant." + getName() + ".Description");
 	}
 
 	@Override
 	public String getUsage() {
-		return Config.getConfig().getString("CommandsAssistant." + getName() + ".Usage");
+		return ValidateCfg("CommandsAssistant." + getName() + ".Usage");
 	}
 
 	@Override
 	public void executeCommand(Player player, String[] args) {
-		player.sendMessage(Utils.AddColors(Config.getConfig().getString("HelpCommand.Header")));
+		player.sendMessage(Utils.AddColors(ValidateCfg("HelpCommand.Header")));
 		Iterator<CommandsAbstractClass> cmdAb = CommandsManager.Argument.iterator();
 		while (cmdAb.hasNext()) {
 			CommandsAbstractClass sCommand = (CommandsAbstractClass) cmdAb.next();

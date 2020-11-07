@@ -12,10 +12,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.TnKnight.SilkySpawner.Methods;
-import me.TnKnight.SilkySpawner.MobsList;
-import me.TnKnight.SilkySpawner.Utils;
-import me.TnKnight.SilkySpawner.Files.Config;
+import Utilities.Methods;
+import Utilities.MobsList;
+import Utilities.Utils;
 import me.TnKnight.SilkySpawner.Menus.MenusStorage.ConfirmType;
 
 public class MobsListMenu extends AbstractMobsListMenu {
@@ -50,7 +49,7 @@ public class MobsListMenu extends AbstractMobsListMenu {
 			}
 			storage.setType(ConfirmType.CREATE);
 			ItemMeta sMeta = e.getCurrentItem().getItemMeta();
-			String lore = Utils.AddColors(Config.getConfig().getString("TypeOfCreature").replace("%creature_type%",
+			String lore = Utils.AddColors(ValidateCfg("TypeOfCreature").replace("%creature_type%",
 			    MobsList.getMobName(((CreatureSpawner) ((BlockStateMeta) sMeta).getBlockState()).getSpawnedType().name())));
 			sMeta.setDisplayName(null);
 			sMeta.setLore(new ArrayList<String>(Arrays.asList(lore)));

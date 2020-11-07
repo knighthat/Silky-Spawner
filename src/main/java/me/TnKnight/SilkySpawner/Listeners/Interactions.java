@@ -14,17 +14,18 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
-import me.TnKnight.SilkySpawner.MobsList;
+import Utilities.MobsList;
 import me.TnKnight.SilkySpawner.SilkySpawner;
 import me.TnKnight.SilkySpawner.Storage;
 import me.TnKnight.SilkySpawner.Menus.MenuManager;
 
-public class Interaction extends Storage implements Listener {
+public class Interactions extends Storage implements Listener {
 
 	private Map<Player, Long> delay = new HashMap<>();
 
-	public Interaction(SilkySpawner main) {
+	public Interactions(SilkySpawner main) {
 		main.getServer().getPluginManager().registerEvents(this, main);
 	}
 
@@ -56,6 +57,7 @@ public class Interaction extends Storage implements Listener {
 				player.sendMessage(noPerm("silkyspawner.changemob." + mobType));
 				return;
 			}
+			boolean success = false;
 			if (MobsList.toList().contains(mobType)) {
 				delay.put(player, System.currentTimeMillis() + 1000);
 				if (inHand.getAmount() > 1) {
@@ -67,15 +69,16 @@ public class Interaction extends Storage implements Listener {
 				Block newSpawner = e.getClickedBlock();
 				CreatureSpawner creature = (CreatureSpawner) newSpawner.getState();
 				creature.setSpawnedType(EntityType.valueOf(mobType));
-				SilkySpawner.instance.getServer().getScheduler().scheduleSyncDelayedTask(SilkySpawner.instance, new Runnable() {
+				new BukkitRunnable() {
+					@Override
 					public void run() {
 						creature.update();
 						delay.remove(player);
 					}
-				}, 5L);
-				player.sendMessage(getMsg("MobChanged").replace("%mob_type%", mobType));
-			} else
-				player.sendMessage(getMsg("CannotChangeMob").replace("%mob_type%", mobType));
+				}.runTaskLaterAsynchronously(SilkySpawner.instance, 5);
+				success = true;
+			}
+			player.sendMessage(getMsg(success ? "MobChanged" : "CannotChangeMob").replaceAll("%mob_type%", mobType));
 		}
 	}
 }

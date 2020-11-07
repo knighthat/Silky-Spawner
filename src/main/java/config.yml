@@ -5,7 +5,7 @@
 # Please, DO NOT change anything in version section #
 #                                                   #
 #####################################################
-version: 0.2.1
+version: 0.2.2
 auto-check: true
 
 
@@ -17,13 +17,11 @@ Prefix: "&e[&bSilky&1Spawner&e] "
 #If true, only PICKAXE with enchantment (custom enchantment with CustomEnchantment is true and SilkTouch with false)
 #will be able to break and get the spawner. If false, breaker receives nothing with non-enchanted pickaxe
 RequireEnchantment: false
-BreakMessage: "&cYou can't break this spawner!"
 
 
 #If true, GameMode listed below will be required if a player want to pick the spawner up. Others gamemode will be received nothing.
 Require: true 
 GameMode: SURVIVAL
-GameModeMessage: "&8Only players in survival mode can break this spawner."
 
 
 #Name and Lore of the spawner appeared when placing the spawner down. Distance is how far from the Name to the top face of the spawner.
@@ -40,8 +38,6 @@ CountTheCodes: true
 MinimumChars: 3
 MaximumChars: 15
 # %type% could be either Name or Lore.
-InputTooShort: "&bYour %type% is too short. At least 3 characters required"
-InputTooLong: "&bYour %type% is too long. Can only be under 15 characters required"
 Name: Name
 Lore: Lore
 #This line will be appeared in lore applied to every spawner on the last line (this line will not be displayed when placed).

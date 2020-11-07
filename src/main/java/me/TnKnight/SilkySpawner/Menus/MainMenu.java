@@ -11,11 +11,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
+import Files.InvConfiguration;
+import Utilities.Utils;
 import me.TnKnight.SilkySpawner.CustomEnchantment;
-import me.TnKnight.SilkySpawner.Utils;
-import me.TnKnight.SilkySpawner.Files.Config;
-import me.TnKnight.SilkySpawner.Files.InvConfiguration;
-import me.TnKnight.SilkySpawner.Files.Message;
 import me.TnKnight.SilkySpawner.Menus.MenusStorage.ConfirmType;
 
 public class MainMenu extends MenuManager {
@@ -55,8 +53,7 @@ public class MainMenu extends MenuManager {
 		for (Material material : items.keySet())
 			if (item.getType().equals(material))
 				if (material.equals(Material.BARRIER)) {
-					if (Message.getConfig().contains("CloseMenu"))
-						player.sendMessage(getMsg("CloseMenu"));
+					player.sendMessage(getMsg("CloseMenu"));
 					player.closeInventory();
 					return;
 				} else if (permConfirm(player, "menu.*") || permConfirm(player, "menu." + items.get(material) + ".*")
@@ -78,7 +75,7 @@ public class MainMenu extends MenuManager {
 							new LoreMenu(storage).openMenu();
 							break;
 						case 4 :
-							if (!Config.getConfig().getBoolean("CustomEnchantment")) {
+							if (!getBoolean("CustomEnchantment")) {
 								player.sendMessage(getMsg("CETurnedOff"));
 								return;
 							}

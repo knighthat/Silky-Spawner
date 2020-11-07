@@ -1,4 +1,4 @@
-package me.TnKnight.SilkySpawner;
+package Utilities;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -7,7 +7,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import me.TnKnight.SilkySpawner.Files.Config;
+import Files.Config;
+import me.TnKnight.SilkySpawner.Storage;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -40,7 +41,7 @@ public class Utils extends Storage {
 	}
 
 	public static boolean charsCounting(Player player, String input, String Type) {
-		input = Config.getConfig().getBoolean("CountTheCodes") ? input : StripColors(input);
+		input = getBoolean("CountTheCodes") ? input : StripColors(input);
 		String type = ValidateCfg(Type);
 		int Minimum = Config.getConfig().getInt("MinimumChars");
 		int Maximum = Config.getConfig().getInt("MaximumChars");
@@ -49,8 +50,7 @@ public class Utils extends Storage {
 			if (!String.valueOf(input.charAt(i)).equals(" "))
 				count++;
 		if (count < Minimum || count > Maximum) {
-			player.sendMessage(Utils.AddColors(
-			    Storage.Prefix() + Config.getConfig().getString(count < Minimum ? "InputTooShort" : "InputTooLong").replace("%type%", type)));
+			player.sendMessage(getMsg(count < Minimum ? "InputTooShort" : "InputTooLong").replace("%type%", type));
 			return false;
 		}
 		return true;

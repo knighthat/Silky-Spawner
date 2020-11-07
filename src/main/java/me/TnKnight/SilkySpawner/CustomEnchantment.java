@@ -15,6 +15,8 @@ import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import Utilities.Methods;
+import Utilities.Utils;
 import net.md_5.bungee.api.ChatColor;
 
 public class CustomEnchantment {
@@ -25,7 +27,7 @@ public class CustomEnchantment {
 		boolean registered = Arrays.stream(Enchantment.values()).collect(Collectors.toList()).contains(PICKDASPAWNER);
 		if (!registered)
 			registerEnchantment(PICKDASPAWNER);
-		SilkySpawner.sendMes("Custom Enchanment successfully registered!", Level.INFO, true);
+		Methods.sendLog("Custom Enchanment successfully registered!", Level.INFO, true);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -47,8 +49,8 @@ public class CustomEnchantment {
 			field.set(null, true);
 			Enchantment.registerEnchantment(ench);
 		} catch (Exception e) {
-			SilkySpawner.sendMes("Failed in enabling Custom Enchantment! Please restart the server.", Level.SEVERE, true);
-			SilkySpawner.sendMes("Report this error if you received this message after resrarting!", Level.SEVERE, false);
+			Methods.sendLog("Failed in enabling Custom Enchantment! Please restart the server.", Level.SEVERE, true);
+			Methods.sendLog("Report this error if you received this message after resrarting!", Level.SEVERE, false);
 		}
 	}
 

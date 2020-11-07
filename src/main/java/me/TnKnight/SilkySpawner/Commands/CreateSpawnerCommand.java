@@ -9,10 +9,9 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import me.TnKnight.SilkySpawner.Methods;
-import me.TnKnight.SilkySpawner.MobsList;
-import me.TnKnight.SilkySpawner.Utils;
-import me.TnKnight.SilkySpawner.Files.Config;
+import Utilities.Methods;
+import Utilities.MobsList;
+import Utilities.Utils;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -25,12 +24,12 @@ public class CreateSpawnerCommand extends CommandsAbstractClass {
 
 	@Override
 	public String getDescription() {
-		return Config.getConfig().getString("CommandsAssistant." + getName() + ".Description");
+		return ValidateCfg("CommandsAssistant." + getName() + ".Description");
 	}
 
 	@Override
 	public String getUsage() {
-		return Config.getConfig().getString("CommandsAssistant." + getName() + ".Usage");
+		return ValidateCfg("CommandsAssistant." + getName() + ".Usage");
 	}
 
 	@Override
@@ -55,7 +54,7 @@ public class CreateSpawnerCommand extends CommandsAbstractClass {
 				} else
 					player.sendMessage(getMsg("NotANumber").replace("%input%", args[1]));
 			final List<String> lore = new ArrayList<>(
-			    Arrays.asList(Config.getConfig().getString("TypeOfCreature").replace("%creature_type%", MobsList.getMobName(mob.name()))));
+			    Arrays.asList(ValidateCfg("TypeOfCreature").replace("%creature_type%", MobsList.getMobName(mob.name()))));
 			Methods.addItem(player, Methods.setItem(new ItemStack(Material.SPAWNER, amount), null, lore, mob));
 		} else
 			player.spigot().sendMessage(cBuilder(getUsage()).create());

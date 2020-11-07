@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.TnKnight.SilkySpawner.Utils;
+import Utilities.Utils;
 
 public class LoreCommand extends CommandsAbstractClass {
 

@@ -28,13 +28,14 @@ MistypedCommand: "&cUsage: "
 #########################################
 
 NotANumber: "&f%input%&7 is not a number!"
-OutOfLines: "&7There is no line number %input%!"
-NoName: "&bYour spawner has no name! Please give it a name."   
+OutOfLines: "&7There is no line number %input%!"  
 NotHoldingSpawner: "&9You must hold your spawner in main han in order to modify %type%!"
 CannotChangeMob: "&3Spawner can't spawn %mob_type%"
 MobChanged: "&bThis spawner is now spawning %mob_type%"
 SameMob: "&aThis spawner is containing %mob_type%"
 NoLore: "&dYour spawner has no line to modify."
+InputTooShort: "&bYour %type% is too short. At least 3 characters required"
+InputTooLong: "&bYour %type% is too long. Can only be under 15 characters required"
 
 
 ##########################################
@@ -47,6 +48,8 @@ CETurnedOff: "&cYou have to enable CustomEnchantment to use this command!"
 NotHoldingPickaxe: "&9You must hold your pickaxe in your main hand in order to add the enchantment."
 AlreadyAdded: "&cYour pickaxe already has this enchantment."
 Success: "&2Enchantment added to your pickaxe successfully!"
+NotEnchanted: "&cYou can't break this spawner!"
+WrongGameMode: "&8Only players in survival mode can break this spawner."
 
 
 #########################################

@@ -2,8 +2,8 @@ package me.TnKnight.SilkySpawner.Commands;
 
 import org.bukkit.entity.Player;
 
-import me.TnKnight.SilkySpawner.Methods;
-import me.TnKnight.SilkySpawner.Utils;
+import Utilities.Methods;
+import Utilities.Utils;
 
 public class RemoveArmorStand extends CommandsAbstractClass {
 
@@ -30,7 +30,7 @@ public class RemoveArmorStand extends CommandsAbstractClass {
 			final int radius = Integer.parseInt(args[0]);
 			if (radius < 0)
 				return;
-			Methods.clearArea(player, radius);
+			Methods.clearArea(player.getLocation(), radius);
 			player.sendMessage(getMsg("RemoveArmorStandsMessage").replace("%radius%", String.valueOf(radius)));
 		} catch (NumberFormatException e) {
 			player.sendMessage(getMsg("NotANumber").replace("%input%", args[0]));

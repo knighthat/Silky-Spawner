@@ -16,14 +16,15 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import me.TnKnight.SilkySpawner.MobsList;
+import Files.Config;
+import Files.InvConfiguration;
+import Files.Message;
+import Files.Mobs;
+import Utilities.Methods;
+import Utilities.MobsList;
+import Utilities.Utils;
 import me.TnKnight.SilkySpawner.SilkySpawner;
 import me.TnKnight.SilkySpawner.Storage;
-import me.TnKnight.SilkySpawner.Utils;
-import me.TnKnight.SilkySpawner.Files.Config;
-import me.TnKnight.SilkySpawner.Files.InvConfiguration;
-import me.TnKnight.SilkySpawner.Files.Message;
-import me.TnKnight.SilkySpawner.Files.Mobs;
 
 public class CommandsManager extends Storage implements CommandExecutor, TabCompleter {
 
@@ -88,7 +89,7 @@ public class CommandsManager extends Storage implements CommandExecutor, TabComp
 					String errorCode = getMsg("Error").replace("%error%", StackStrace);
 					player.sendMessage(errorCode);
 					player.sendMessage(getMsg("ErrorMessage"));
-					SilkySpawner.sendMes(Utils.AddColors(errorCode), Level.SEVERE, true);
+					Methods.sendLog(Utils.AddColors(errorCode), Level.SEVERE, true);
 				}
 			}
 		}
@@ -102,7 +103,7 @@ public class CommandsManager extends Storage implements CommandExecutor, TabComp
 			if (args.length == 1) {
 				results.add("reload");
 			} else
-				SilkySpawner.sendMes("&cConsole can only be able to execute \"reload\" command!", Level.SEVERE, true);
+				Methods.sendLog("&cConsole can only be able to execute \"reload\" command!", Level.SEVERE, true);
 		} else {
 			switch (args.length) {
 				case 1 :
@@ -159,9 +160,9 @@ abstract class CommandsAbstractClass extends Storage {
 	public abstract void executeCommand(Player player, String[] args);
 
 	protected String getDes(String cmd) {
-		return Config.getConfig().getString("CommandsAssistant." + cmd + ".Description");
+		return ValidateCfg("CommandsAssistant." + cmd + ".Description");
 	}
 	protected String getUsg(String cmd) {
-		return Config.getConfig().getString("CommandsAssistant." + cmd + ".Usage");
+		return ValidateCfg("CommandsAssistant." + cmd + ".Usage");
 	}
 }

@@ -1,4 +1,4 @@
-package me.TnKnight.SilkySpawner.Files;
+package Files;
 
 import java.io.File;
 import java.io.InputStreamReader;
@@ -7,7 +7,7 @@ import java.io.Reader;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import me.TnKnight.SilkySpawner.MobsList;
+import Utilities.MobsList;
 import me.TnKnight.SilkySpawner.SilkySpawner;
 
 public class Mobs {

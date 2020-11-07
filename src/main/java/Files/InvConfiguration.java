@@ -1,4 +1,4 @@
-package me.TnKnight.SilkySpawner.Files;
+package Files;
 
 import java.io.File;
 import java.io.InputStreamReader;

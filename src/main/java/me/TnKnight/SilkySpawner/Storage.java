@@ -6,8 +6,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import me.TnKnight.SilkySpawner.Files.Config;
-import me.TnKnight.SilkySpawner.Files.Message;
+import Files.Config;
+import Files.Message;
+import Utilities.Utils;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 
@@ -32,8 +33,8 @@ public class Storage {
 	public static ChatColor HoverColor() {
 		return ChatColor.valueOf(ValidateCfg("HelpCommand.HoverColor"));
 	}
-	public static String getConfig(String path) {
-		return Utils.AddColors(Prefix() + ValidateCfg(path));
+	public static boolean getBoolean(String path) {
+		return Config.getConfig().getBoolean(path);
 	}
 
 	protected boolean cConfirm(Player player, String string, String usage) {
@@ -49,10 +50,10 @@ public class Storage {
 		ItemStack hand = player.getInventory().getItemInMainHand();
 		if (hand != null && hand.getType().equals(Material.getMaterial(material.toUpperCase())))
 			return true;
-		player.sendMessage(getMsg("NotHoldingSpawner").replace("%type%", Config.getConfig().getString(type)));
+		player.sendMessage(getMsg("NotHoldingSpawner").replace("%type%", ValidateCfg(type)));
 		return false;
 	}
-	protected String getMsg(String path) {
+	protected static String getMsg(String path) {
 		Validate.notNull(Message.getConfig().getString(path), path + nll);
 		return Utils.AddColors(Prefix() + Message.getConfig().getString(path));
 	}

@@ -1,4 +1,4 @@
-package me.TnKnight.SilkySpawner;
+package Utilities;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import org.bukkit.entity.EntityType;
 
-import me.TnKnight.SilkySpawner.Files.Mobs;
+import Files.Mobs;
 
 public enum MobsList {
 

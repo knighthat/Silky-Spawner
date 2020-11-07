@@ -6,8 +6,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.TnKnight.SilkySpawner.Methods;
-import me.TnKnight.SilkySpawner.Utils;
+import Utilities.Methods;
+import Utilities.Utils;
 import me.TnKnight.SilkySpawner.Menus.MenusStorage.ConfirmType;
 
 public class ConfirmMenu extends MenuManager {
@@ -88,7 +88,7 @@ public class ConfirmMenu extends MenuManager {
 					storage.setType(ConfirmType.CONFIRM_ITEM);
 					new ConfirmMenu(storage).openMenu();
 				} else if (type.equals(ConfirmType.REMOVE_ARMORSTANDS)) {
-					Methods.clearArea(player, number);
+					Methods.clearArea(player.getLocation(), number);
 					player.sendMessage(getMsg("RemoveArmorStandsMessage").replace("%radius%", String.valueOf(number)));
 					player.closeInventory();
 				} else

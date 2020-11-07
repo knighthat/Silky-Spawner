@@ -1,4 +1,4 @@
-package me.TnKnight.SilkySpawner.Files;
+package Files;
 
 import java.io.File;
 import java.io.InputStreamReader;
@@ -9,7 +9,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.TnKnight.SilkySpawner.SilkySpawner;
-
 public class Config {
 
 	private static SilkySpawner Main = SilkySpawner.instance;

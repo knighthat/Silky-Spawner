@@ -4,7 +4,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import me.TnKnight.SilkySpawner.CustomEnchantment;
-import me.TnKnight.SilkySpawner.Files.Config;
 
 public class EnchantCommand extends CommandsAbstractClass {
 
@@ -15,17 +14,17 @@ public class EnchantCommand extends CommandsAbstractClass {
 
 	@Override
 	public String getDescription() {
-		return Config.getConfig().getString("CommandsAssistant." + getName() + ".Description");
+		return ValidateCfg("CommandsAssistant." + getName() + ".Description");
 	}
 
 	@Override
 	public String getUsage() {
-		return Config.getConfig().getString("CommandsAssistant." + getName() + ".Usage");
+		return ValidateCfg("CommandsAssistant." + getName() + ".Usage");
 	}
 
 	@Override
 	public void executeCommand(Player player, String[] args) {
-		if (!Config.getConfig().getBoolean("CustomEnchantment")) {
+		if (!getBoolean("CustomEnchantment")) {
 			player.sendMessage(getMsg("CETurnedOff"));
 			return;
 		}

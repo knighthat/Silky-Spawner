@@ -14,11 +14,11 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import Files.InvConfiguration;
+import Files.Message;
+import Utilities.Utils;
 import me.TnKnight.SilkySpawner.SilkySpawner;
 import me.TnKnight.SilkySpawner.Storage;
-import me.TnKnight.SilkySpawner.Utils;
-import me.TnKnight.SilkySpawner.Files.InvConfiguration;
-import me.TnKnight.SilkySpawner.Files.Message;
 import me.TnKnight.SilkySpawner.Menus.MenusStorage.ConfirmType;
 
 public abstract class MenuManager extends Storage implements InventoryHolder {
