@@ -82,7 +82,7 @@ MainMenu:
   
 CreateSpawnerMenu:
   Title: "&a&lCreate &b&lCustom &e&lSpawner &f- &8Page %page%"
-  Fill: BLUE_STAINED_GLASS_PANE
+  FillItem: BLUE_STAINED_GLASS_PANE
   
 
 #########################################
@@ -129,4 +129,4 @@ LineRangeMenu:
 
 ConfirmMenu:
   Title: "&a&lConfirm Menu"
-  Fill: AIR
+  FillItem: RED_STAINED_GLASS_PANE

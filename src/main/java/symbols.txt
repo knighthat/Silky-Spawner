@@ -1,0 +1,6 @@
+#Formula: [name-you-want]<Symbol(s)> -> e.g: [heart]♥ or [cross]⛌✖
+#Only line follows formula above will be counted.
+#It is case sensetive so my recommend is set it all lower case.
+[heart]♥
+[cross]✖
+[star]★

@@ -1,8 +1,9 @@
+main: me.TnKnight.SilkySpawner.SilkySpawner
 name: SilkySpawner
 author: TnKnight
-version: 0.2.2
+version: 0.3.0
 api-version: 1.13
-main: me.TnKnight.SilkySpawner.SilkySpawner
+
 
 commands:
   SilkySpawner:
