@@ -7,6 +7,8 @@
 ReloadMessage: "&aconfig.yml, message.yml, guisconfig.yml have been reloaded!"
 PlaceSpawner: "&2You just placed a spawner named %name%"
 RemoveArmorStandsMessage: "&9All custom ArmorStands have been removed within %radius% blocks."
+WrongGameMode: "&8Only players in survival mode can break this spawner."
+InventoryFull: "&cInventory full! Dropping item."
 
 
 #########################################
@@ -19,7 +21,7 @@ Error: "&4&lErrorCode: &e%error%"
 ErrorMessage: "&bPlease report this &4&lErrorCode &bto admin ASAP!"
 NoPerm: "&cYou don't have permission &f%perm% &cto execute this command!"
 MistypedCommand: "&cUsage: "
-
+CannotExecuteCommand: "You have to cancel the modification before using commands. Type in '%cancel_request%' to cancel"
 
 #########################################
 #                                       #
@@ -29,7 +31,7 @@ MistypedCommand: "&cUsage: "
 
 NotANumber: "&f%input%&7 is not a number!"
 OutOfLines: "&7There is no line number %input%!"  
-NotHoldingSpawner: "&9You must hold your spawner in main han in order to modify %type%!"
+NotHoldingSpawner: "&9You must hold your spawner in main hand in order to modify %type%!"
 CannotChangeMob: "&3Spawner can't spawn %mob_type%"
 MobChanged: "&bThis spawner is now spawning %mob_type%"
 SameMob: "&aThis spawner is containing %mob_type%"
@@ -49,7 +51,6 @@ NotHoldingPickaxe: "&9You must hold your pickaxe in your main hand in order to a
 AlreadyAdded: "&cYour pickaxe already has this enchantment."
 Success: "&2Enchantment added to your pickaxe successfully!"
 NotEnchanted: "&cYou can't break this spawner!"
-WrongGameMode: "&8Only players in survival mode can break this spawner."
 
 
 #########################################
@@ -66,4 +67,3 @@ SetName: "&7Name your spawner (&6%min% &7- &6%max% &7chars.)"
 SetLore: "&7Write down a line of lore (&6%min% &7- &6%max% &7chars.)"
 RequestCancel: "&eTips: Type %request% to cancel the modification."
 Cancelled: "&cYou cancelled it!"
-LackOfSpace: "&c&lYou don't have enough space to create new spawner!"

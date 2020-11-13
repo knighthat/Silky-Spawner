@@ -5,7 +5,7 @@
 # Please, DO NOT change anything in version section #
 #                                                   #
 #####################################################
-version: 0.3.0
+version: 0.3.1
 auto-check: true
 
 
@@ -13,14 +13,8 @@ auto-check: true
 
 Prefix: "&e[&bSilky&1Spawner&e] "
 
-
-#If true, only PICKAXE with enchantment (custom enchantment with CustomEnchantment is true and SilkTouch with false)
-#will be able to break and get the spawner. If false, breaker receives nothing with non-enchanted pickaxe
-RequireEnchantment: false
-
-
 #If true, GameMode listed below will be required if a player want to pick the spawner up. Others gamemode will be received nothing.
-Require: true 
+RequireGameMode: true 
 GameMode: SURVIVAL
 
 
@@ -44,7 +38,8 @@ Lore: Lore
 TypeOfCreature: "&cCreature: &6&l%creature_type%"
 
 
-#If true, you can change the message in the message.yml file
+#If true, pickaxe with Enchantment has name below will be able to break the spawners.
+#If false, SilkTouch is required to break spawners.
 CustomEnchantment: true
 EnchantmentName: "Spawner Picker"
 
@@ -62,11 +57,12 @@ HelpCommand:
   
 
 # You are no longer be able to modify permissions because it caused some type of troubles and less efficent
+# For more, please visit: https://github.com/knighthat/Silky-Spawner/wiki#permissions
 CommandsAssistant:
   help:
     Usage: "/silkyspawner help"
     Description: "List all the available commands."
-    Permission: 
+    Permission: silkyspwner.command.help
   reload:
     Usage: "/silkyspawner reload"
     Description: "Reload this plugin."
