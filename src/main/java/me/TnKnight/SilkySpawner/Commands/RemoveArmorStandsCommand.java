@@ -11,7 +11,7 @@ public class RemoveArmorStandsCommand extends CommandsAbstractClass
 	
 	@Override
 	public void executeCommand(Player player, String label, String[] args) {
-		if (!permConfirm(player, new String[] { getNode(), wildcard, cmdNode }))
+		if (!permConfirm(player, new String[] { getNode(), cmdNode }))
 			return;
 		if (!cmdConfirm(player, arrayToString(args, 0), getUsg(), label))
 			return;

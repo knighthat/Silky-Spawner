@@ -5,13 +5,20 @@
 # Please, DO NOT change anything in version section #
 #                                                   #
 #####################################################
-version: 0.3.1
+version: 0.3.2
 auto-check: true
 
 
 
 
 Prefix: "&e[&bSilky&1Spawner&e] "
+
+
+#If true, pickaxe with Enchantment has name below will be able to break the spawners.
+#If false, SilkTouch is required to break spawners.
+CustomEnchantment: true
+EnchantmentName: "Spawner Picker"
+
 
 #If true, GameMode listed below will be required if a player want to pick the spawner up. Others gamemode will be received nothing.
 RequireGameMode: true 
@@ -38,17 +45,11 @@ Lore: Lore
 TypeOfCreature: "&cCreature: &6&l%creature_type%"
 
 
-#If true, pickaxe with Enchantment has name below will be able to break the spawners.
-#If false, SilkTouch is required to break spawners.
-CustomEnchantment: true
-EnchantmentName: "Spawner Picker"
-
-
 #Name and lore modification will be cancelled if players type this in their chat
 CancelRequest: "!cancel"
 
 
-#For more color codes. Visit this website: https://www.colorschemer.com/minecraft-color-codes/
+#For more color. Visit this website: https://www.colorschemer.com/minecraft-color-codes/
 HelpCommand:
   Header: "&9List of all &b&lCLICKABLE &9commands"
   HoverText: Click here to get the command!

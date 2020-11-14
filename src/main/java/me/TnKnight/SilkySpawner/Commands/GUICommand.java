@@ -14,7 +14,7 @@ public class GUICommand extends CommandsAbstractClass
 	
 	@Override
 	public void executeCommand(Player player, String label, String[] args) {
-		if (!permConfirm(player, new String[] { getNode(), wildcard, cmdNode }))
+		if (!permConfirm(player, new String[] { getNode(), cmdNode }))
 			return;
 		switch (args.length)
 		{

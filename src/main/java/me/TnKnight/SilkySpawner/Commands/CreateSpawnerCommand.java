@@ -40,7 +40,7 @@ public class CreateSpawnerCommand extends CommandsAbstractClass
 				return;
 			}
 			EntityType mob = EntityType.valueOf(args[0].toUpperCase());
-			if (!permConfirm(player, new String[] { getNode() + "." + mob.name(), cmdNode, wildcard }))
+			if (!permConfirm(player, new String[] { getNode() + "." + mob.name(), cmdNode }))
 				return;
 			int amount = 0;
 			if (args.length == 2) {

@@ -14,7 +14,7 @@ public class SetNameCommand extends CommandsAbstractClass
 	@Override
 	public void executeCommand(Player player, String label, String[] args) {
 		String argument = arrayToString(args, 0);
-		if (!permConfirm(player, new String[] { getNode(), wildcard, cmdNode }))
+		if (!permConfirm(player, new String[] { getNode(), cmdNode }))
 			return;
 		if (!holdingItem(player, true, true))
 			return;

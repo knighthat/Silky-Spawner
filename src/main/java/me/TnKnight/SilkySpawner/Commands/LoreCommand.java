@@ -31,7 +31,7 @@ public class LoreCommand extends CommandsAbstractClass
 					this.sendMes(player, cmd);
 			return;
 		}
-		if (!permConfirm(player, new String[] { getNode() + "." + args[0].toLowerCase(), getNode().concat(".*"), cmdNode, wildcard })) {
+		if (!permConfirm(player, new String[] { getNode() + "." + args[0].toLowerCase(), getNode().concat(".*"), cmdNode })) {
 			return;
 		}
 		if ((args.length == 1 && args[0].equalsIgnoreCase("add"))

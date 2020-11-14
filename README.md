@@ -1,7 +1,7 @@
 ![illustration](https://i.ibb.co/Tvp20L4/Banner.png)
 _**```→ |Yet Another Pickup Spawner Plugin| ← But wait, there's more. Check it out!```**_
 
-* Current version: **v0.3.0**.
+* Current version: **v0.3.2**.
 * Supported versions: **1.13.x**, **1.14.x**, **1.15.x**, **1.16.x**.
 
 # Description

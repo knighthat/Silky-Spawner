@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
@@ -81,14 +80,13 @@ public class Listeners extends Storage implements Listener
 	}
 	
 	@EventHandler
-	public void menuInteraction(InventoryClickEvent e) {
+	public void onMenuClick(InventoryClickEvent e) {
 		if (e.getCurrentItem() == null || e.getCurrentItem().getType().equals(Material.AIR))
 			return;
 		if (e.getView().getTopInventory().getHolder() instanceof MenusManager) {
 			e.setCancelled(true);
 			if (!(e.getInventory().getHolder() instanceof MenusManager))
 				return;
-			
 			((MenusManager) e.getInventory().getHolder()).itemClicked(e);
 		}
 	}
@@ -103,7 +101,7 @@ public class Listeners extends Storage implements Listener
 		boolean success = true;
 		if (delay.containsKey(player) && delay.get(player) > System.currentTimeMillis())
 			return;
-		if (!permConfirm(player, new String[] { "changemob." + mobType, "changemob.*", wildcard }))
+		if (!permConfirm(player, new String[] { "changemob." + mobType, "changemob.*" }))
 			return;
 		if (!MobsList.toList().contains(mobType))
 			success = false;
@@ -130,6 +128,12 @@ public class Listeners extends Storage implements Listener
 		player.sendMessage(getMsg(message).replace("%mob_type%", MobsList.getMobName(spawnedType)));
 	}
 	
+	private List<Material> materials = new ArrayList<>();
+	{
+		materials.add(Material.REDSTONE);
+		materials.add(Material.GLOWSTONE_DUST);
+	}
+	
 	@EventHandler
 	public void onSpawnerPlace(BlockPlaceEvent e) {
 		if (!e.getBlock().getType().equals(Material.SPAWNER))
@@ -146,6 +150,16 @@ public class Listeners extends Storage implements Listener
 				final Double loca = (getDistance() - .3) - (getSpace() * (line + 1));
 				spawnArmorStand(spawner, sMeta.getLore().get(line), loca);
 			}
+		new BukkitRunnable() {
+			final EntityType spawnedType = ((CreatureSpawner) ((BlockStateMeta) sItem.getItemMeta()).getBlockState()).getSpawnedType();
+			CreatureSpawner creature = (CreatureSpawner) spawner.getState();
+			
+			@Override
+			public void run() {
+				creature.setSpawnedType(spawnedType);
+				creature.update();
+			}
+		}.runTaskLater(SilkySpawner.instance, 5);
 	}
 	
 	@EventHandler
@@ -160,7 +174,7 @@ public class Listeners extends Storage implements Listener
 			e.setCancelled(true);
 			return;
 		}
-		GameMode gamemode = GameMode.valueOf(validateCfg("GameMode").toString());
+		final GameMode gamemode = GameMode.valueOf(validateCfg("GameMode").toString());
 		if ((boolean) validateCfg("RequireGameMode") && !player.getGameMode().equals(gamemode)) {
 			player.sendMessage(getMsg("WrongGameMode"));
 			e.setCancelled(true);
@@ -168,8 +182,7 @@ public class Listeners extends Storage implements Listener
 		}
 		Block spawner = e.getBlock();
 		final EntityType spawnedType = ((CreatureSpawner) spawner.getState()).getSpawnedType();
-		Location addLoc = spawner.getLocation().add(.5, 1, .5);
-		Collection<Entity> entities = spawner.getWorld().getNearbyEntities(addLoc, .5, getDistance(), .5);
+		Collection<Entity> entities = spawner.getWorld().getNearbyEntities(spawner.getLocation(), 1, getDistance() + 1, 1);
 		entities.stream().forEach(E ->
 		{
 			if (!E.getType().equals(EntityType.ARMOR_STAND) || E.getCustomName() == null || ((ArmorStand) E).getHealth() != SERIAL)
@@ -192,7 +205,7 @@ public class Listeners extends Storage implements Listener
 	}
 	
 	@EventHandler
-	public void stopCmdProcessing(PlayerCommandPreprocessEvent e) {
+	public void stopCmdsProcessing(PlayerCommandPreprocessEvent e) {
 		Player player = e.getPlayer();
 		MenusStorage storage = SilkySpawner.getStorage(player);
 		if (storage.getBolean()) {

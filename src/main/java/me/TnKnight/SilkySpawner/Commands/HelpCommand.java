@@ -13,7 +13,7 @@ public class HelpCommand extends CommandsAbstractClass
 	
 	@Override
 	public void executeCommand(Player player, String label, String[] args) {
-		if (!permConfirm(player, new String[] { getNode(), wildcard, cmdNode }))
+		if (!permConfirm(player, new String[] { getNode(), cmdNode }))
 			return;
 		player.sendMessage(addColors(validateCfg("HelpCommand.Header").toString()));
 		Iterator<CommandsAbstractClass> cmdAb = CommandsManager.Argument.iterator();

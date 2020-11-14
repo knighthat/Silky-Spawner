@@ -17,6 +17,35 @@ CloseButton: "&c&lClose Menu"
 
 #########################################
 #                                       #
+#             CONFIRM MENU              #
+#                                       #
+# Please, DO NOT change anything before #
+#       ":" or you will get errors      #
+#                                       #
+#########################################
+
+ConfirmMenu:
+  Title: "&a&lConfirm Menu"
+  FillItem: RED_STAINED_GLASS_PANE
+  
+
+#########################################
+#                                       #
+#          CREATE SPAWNER MENU          #
+#                                       #
+# Please, DO NOT change anything before #
+#       ":" or you will get errors      #
+#                                       #
+#########################################
+  
+CreateSpawnerMenu:
+  Title: "&a&lCreate &b&lCustom &e&lSpawner &f- &8Page %page%"
+  FillItem: BLUE_STAINED_GLASS_PANE
+  
+
+
+#########################################
+#                                       #
 #               MAIN MENU               #
 #                                       #
 # Please, DO NOT change anything before #
@@ -69,21 +98,7 @@ MainMenu:
       - ""
       - "&8List all the available commands"
       - ""
-    
- 
-#########################################
-#                                       #
-#          CREATE SPAWNER MENU          #
-#                                       #
-# Please, DO NOT change anything before #
-#       ":" or you will get errors      #
-#                                       #
-#########################################
-  
-CreateSpawnerMenu:
-  Title: "&a&lCreate &b&lCustom &e&lSpawner &f- &8Page %page%"
-  FillItem: BLUE_STAINED_GLASS_PANE
-  
+      
 
 #########################################
 #                                       #
@@ -104,29 +119,36 @@ LoreModificatiorMenu:
   
 #########################################
 #                                       #
-#       LINE/RANGE CHOOSING MENU       #
+#       LINE/RANGE CHOOSING MENU        #
 #                                       #
 # Please, DO NOT change anything before #
 #       ":" or you will get errors      #
 #                                       #
 #########################################
+
 LineRangeMenu:
   LineTitle: "&aChoose a line to continue"
   LineDisplay: "&eLine#: &6%line%"
   RangeTitle: "&cDefine a range to clear"
   RangeDisplay: "&eRadius: &6%radius%" 
   FillItem: WHITE_STAINED_GLASS_PANE
-
+  
 
 #########################################
 #                                       #
-#             CONFIRM MENU              #
+#       SPAWNER MODIFICATION MENU       #
 #                                       #
 # Please, DO NOT change anything before #
 #       ":" or you will get errors      #
 #                                       #
-#########################################
+#########################################  
 
-ConfirmMenu:
-  Title: "&a&lConfirm Menu"
-  FillItem: RED_STAINED_GLASS_PANE
+SpawnerModificationMenu:
+  Title: "&c&lSpawner's &a&lstatus"
+  FillItem: GLASS_PANE 
+  Location: "&7Location: &bX:%x% Y:%y% Z:%z%"
+  RequiredPlayer: "&1Required Player: &c%value%"
+  SpawnedType: "Spawning: %creature_type%"
+  RequiredRange: "&ePlayer have to stay away &6&l%block% &eblocks"
+  SpawnedTime: "&aSpawned Time: &bBetween &6%min% &bsecond(s) to &6%max% &bsecond(s)"
+  

@@ -112,9 +112,8 @@ public class SilkySpawner extends JavaPlugin
 	private void checkNewVersion() {
 		Storage.sendLog("Checking for new version...", "INFO", true);
 		try {
-			BufferedReader file = new BufferedReader(
-					new InputStreamReader(new URL("https://raw.githubusercontent.com/knighthat/Silky-Spawner/master/plugin.yml").openStream())
-			);
+			final String url = "https://raw.githubusercontent.com/knighthat/Silky-Spawner/master/plugin.yml";
+			BufferedReader file = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
 			String str;
 			while ((str = file.readLine()) != null)
 				if (str.startsWith("version: "))
