@@ -23,6 +23,7 @@ NoPerm: "&cYou don't have permission &f%perm% &cto execute this command!"
 MistypedCommand: "&cUsage: "
 CannotExecuteCommand: "You have to cancel the modification before using commands. Type in '%cancel_request%' to cancel"
 
+
 #########################################
 #                                       #
 #            SPAWNER MESSAGE            #
@@ -59,7 +60,6 @@ NotEnchanted: "&cYou can't break this spawner!"
 #                                       #
 #########################################
 
-CloseMenu: "&cMenu Closed!"
 GetSpawner: "&dEnjoy your spawner!"
 OnFirstPage: "&cYou are on the very first page!"
 OnLastPage: "&cNo more pages for you to go through :("

@@ -23,8 +23,7 @@ public class GUICommand extends CommandsAbstractClass
 				break;
 			
 			default:
-				final String usg = getUsg().replace(getUsg().split(" ")[0], label);
-				player.spigot().sendMessage(misTyped(usg));
+				player.spigot().sendMessage(misTyped(getUsg(), label));
 				break;
 		}
 	}

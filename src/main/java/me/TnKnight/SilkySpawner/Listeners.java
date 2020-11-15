@@ -96,6 +96,7 @@ public class Listeners extends Storage implements Listener
 		if (!e.getMaterial().toString().endsWith("_SPAWN_EGG") || !e.getClickedBlock().getType().equals(Material.SPAWNER)
 				|| !e.getAction().equals(Action.RIGHT_CLICK_BLOCK))
 			return;
+		e.setCancelled(true);
 		final Player player = e.getPlayer();
 		final String mobType = e.getMaterial().toString().replace("_SPAWN_EGG", "");
 		boolean success = true;
@@ -126,12 +127,6 @@ public class Listeners extends Storage implements Listener
 			}.runTaskLater(SilkySpawner.instance, 5);
 		}
 		player.sendMessage(getMsg(message).replace("%mob_type%", MobsList.getMobName(spawnedType)));
-	}
-	
-	private List<Material> materials = new ArrayList<>();
-	{
-		materials.add(Material.REDSTONE);
-		materials.add(Material.GLOWSTONE_DUST);
 	}
 	
 	@EventHandler

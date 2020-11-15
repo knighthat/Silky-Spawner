@@ -59,7 +59,7 @@ public class CommandsManager extends Storage implements CommandExecutor, TabComp
 			if (args.length == 0 || (args.length >= 1 && !Arg1.contains(args[0].toLowerCase()))) {
 				if (sender instanceof Player) {
 					final String getCmd = "/" + label + " help";
-					sender.spigot().sendMessage(misTyped(getCmd));
+					sender.spigot().sendMessage(misTyped(getCmd, label));
 				} else
 					sender.sendMessage("/silkyspawner help");
 				return true;

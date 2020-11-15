@@ -1,5 +1,7 @@
 package me.TnKnight.SilkySpawner.Menus;
 
+import org.bukkit.Location;
+import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -15,6 +17,33 @@ public class MenusStorage
 	private ConfirmType type;
 	private int line;
 	private Boolean bolean = false;
+	private CreatureSpawner creatureSpawner;
+	private Boolean hand;
+	private Location location;
+	
+	public Location getLocation() {
+		return location;
+	}
+	
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+	
+	public Boolean getHand() {
+		return hand;
+	}
+	
+	public void setHand(Boolean hand) {
+		this.hand = hand;
+	}
+	
+	public CreatureSpawner getCreatureSpawner() {
+		return creatureSpawner;
+	}
+	
+	public void setCreatureSpawner(CreatureSpawner creatureSpawner) {
+		this.creatureSpawner = creatureSpawner;
+	}
 	
 	public int getLine() {
 		return line;

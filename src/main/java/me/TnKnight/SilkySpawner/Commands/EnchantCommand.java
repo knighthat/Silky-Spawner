@@ -21,8 +21,7 @@ public class EnchantCommand extends CommandsAbstractClass
 			return;
 		}
 		if (args.length > 0) {
-			final String usg = getUsg().replace(getUsg().split(" ")[0], label);
-			player.spigot().sendMessage(misTyped(usg));
+			player.spigot().sendMessage(misTyped(getUsg(), label));
 		} else if (player.getInventory().getItemInMainHand().getType().toString().endsWith("_PICKAXE")) {
 			ItemStack pickaxe = player.getInventory().getItemInMainHand();
 			if (!pickaxe.getEnchantments().containsKey(CustomEnchantment.PICKDASPAWNER)) {

@@ -51,7 +51,6 @@ public class MainMenu extends MenusManager
 		Player player = (Player) e.getWhoClicked();
 		Material clicked = e.getCurrentItem().getType();
 		if (clicked.equals(Material.BARRIER)) {
-			player.sendMessage(getMsg("CloseMenu"));
 			player.closeInventory();
 			return;
 		}
@@ -66,7 +65,6 @@ public class MainMenu extends MenusManager
 			
 			case 2:
 				accessModification(player, true, ConfirmType.NAME);
-				player.sendMessage("HI");
 				break;
 			
 			case 3:

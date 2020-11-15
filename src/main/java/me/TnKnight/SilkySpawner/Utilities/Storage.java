@@ -202,8 +202,9 @@ public class Storage
 		return ChatColor.valueOf(input.toUpperCase());
 	}
 	
-	public static BaseComponent[] misTyped(final String command) {
+	public static BaseComponent[] misTyped(String command, final String label) {
 		ComponentBuilder builder = new ComponentBuilder(addColors(validateMsg("MistypedCommand")));
+		command = command.replace(command.split(" ")[0], "/" + label);
 		builder.append(clickableMessage(command, command));
 		return builder.create();
 	}
