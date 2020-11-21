@@ -29,12 +29,12 @@ public class CreateSpawnerCommand extends CommandsAbstractClass
 		if (args.length == 0) {
 			if (!permConfirm(player, getPerms))
 				return;
-			player.spigot().sendMessage(this.getMobsList());
+			player.spigot().sendMessage(getMobsList(player, label, getName()));
 		} else if (args.length <= 2) {
 			if (!MobsList.toList().contains(args[0].toUpperCase())) {
 				for (String perm : getPerms)
 					if (player.hasPermission("silkyspawner." + perm)) {
-						player.spigot().sendMessage(this.getMobsList());
+						player.spigot().sendMessage(getMobsList(player, label, getName()));
 						break;
 					}
 				return;
@@ -61,12 +61,14 @@ public class CreateSpawnerCommand extends CommandsAbstractClass
 			player.spigot().sendMessage(clickableMessage(this.label, this.label));
 	}
 	
-	private BaseComponent[] getMobsList() {
+	public static BaseComponent[] getMobsList(final Player player, final String label, final String subCommand) {
 		ComponentBuilder builder = new ComponentBuilder();
 		for (int i = 0; i < MobsList.toList().size(); i++) {
 			final String comma = ChatColor.GRAY + (i == MobsList.toList().size() - 1 ? "." : ", ");
 			final String spawnedType = MobsList.toList().get(i);
-			builder.append(clickableMessage(spawnedType.toLowerCase() + comma, label + spawnedType));
+			final String perm = "silkyspawner.command." + subCommand + "." + spawnedType;
+			if (player.hasPermission(perm) || player.hasPermission(wildcard) || player.hasPermission(cmdNode))
+				builder.append(clickableMessage(spawnedType.toLowerCase() + comma, label + spawnedType));
 		}
 		builder.italic(true);
 		return builder.create();

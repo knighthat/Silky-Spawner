@@ -26,6 +26,7 @@ public class LoreCommand extends CommandsAbstractClass
 	public void executeCommand(Player player, String label, String[] args) {
 		this.label = label + " " + getName() + " ";
 		if (args.length == 0 || !command.contains(args[0].toLowerCase())) {
+			player.sendMessage(getMsg("MistypedCommand"));
 			for (String cmd : command)
 				if (player.hasPermission("silkyspwaner." + cmd) || player.hasPermission(cmdNode) || player.hasPermission(wildcard))
 					this.sendMes(player, cmd);

@@ -39,6 +39,8 @@ SameMob: "&aThis spawner is containing %mob_type%"
 NoLore: "&dYour spawner has no line to modify."
 InputTooShort: "&bYour %type% is too short. At least 3 characters required"
 InputTooLong: "&bYour %type% is too long. Can only be under 15 characters required"
+HaveNoEggs: "&9You must have at least one %egg% in your inventory to modify %type%."
+NotASpawner: "&cYou are not holding or looking at a spawner."
 
 
 ##########################################

@@ -177,13 +177,13 @@ public class Listeners extends Storage implements Listener
 		}
 		Block spawner = e.getBlock();
 		final EntityType spawnedType = ((CreatureSpawner) spawner.getState()).getSpawnedType();
+		List<ArmorStand> armor_stands = new ArrayList<>();
 		Collection<Entity> entities = spawner.getWorld().getNearbyEntities(spawner.getLocation(), 1, getDistance() + 1, 1);
 		entities.stream().forEach(E ->
 		{
-			if (!E.getType().equals(EntityType.ARMOR_STAND) || E.getCustomName() == null || ((ArmorStand) E).getHealth() != SERIAL)
-				entities.remove(E);
+			if (E.getType().equals(EntityType.ARMOR_STAND) && E.getCustomName() != null && ((ArmorStand) E).getHealth() == SERIAL)
+				armor_stands.add((ArmorStand) E);
 		});
-		List<ArmorStand> armor_stands = entities.stream().map(A -> (ArmorStand) A).collect(Collectors.toList());
 		String display_name = null;
 		List<String> lore = new ArrayList<>();
 		if (armor_stands != null && armor_stands.size() > 0) {

@@ -204,7 +204,7 @@ public class Storage
 	
 	public static BaseComponent[] misTyped(String command, final String label) {
 		ComponentBuilder builder = new ComponentBuilder(addColors(validateMsg("MistypedCommand")));
-		command = command.replace(command.split(" ")[0], "/" + label);
+		command = command.replace(command.split(" ")[0], label);
 		builder.append(clickableMessage(command, command));
 		return builder.create();
 	}
@@ -238,6 +238,7 @@ public class Storage
 	public static void addItem(final Player player, ItemStack item, final boolean take) {
 		if (take)
 			takeItem(player);
+		item.setAmount(1);
 		if (player.getInventory().firstEmpty() < 0) {
 			final String invFull = addColors(validateMsg("InventoryFull"));
 			player.sendTitle(invFull, null, 5, 60, 20);

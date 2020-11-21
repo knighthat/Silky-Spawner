@@ -40,6 +40,7 @@ public class CommandsManager extends Storage implements CommandExecutor, TabComp
 		Argument.add(new RemoveArmorStandsCommand());
 		Argument.add(new CreateSpawnerCommand());
 		Argument.add(new GUICommand());
+		Argument.add(new ChangeMobCommand());
 		Arg1.addAll(Argument.stream().map(Class -> Class.getName()).collect(Collectors.toList()));
 	}
 	
@@ -59,7 +60,7 @@ public class CommandsManager extends Storage implements CommandExecutor, TabComp
 			if (args.length == 0 || (args.length >= 1 && !Arg1.contains(args[0].toLowerCase()))) {
 				if (sender instanceof Player) {
 					final String getCmd = "/" + label + " help";
-					sender.spigot().sendMessage(misTyped(getCmd, label));
+					sender.spigot().sendMessage(misTyped(getCmd, "/" + label));
 				} else
 					sender.sendMessage("/silkyspawner help");
 				return true;
@@ -105,6 +106,7 @@ public class CommandsManager extends Storage implements CommandExecutor, TabComp
 			} else
 				Storage.sendLog("&cConsole can only be able to execute \"reload\" command!", "SEVERE", true);
 		} else {
+			Player player = (Player) sender;
 			switch (args.length)
 			{
 				case 1:
@@ -118,9 +120,10 @@ public class CommandsManager extends Storage implements CommandExecutor, TabComp
 						for (String filter : LoreCommand.command)
 							if (filter.toLowerCase().startsWith(args[1].toLowerCase()))
 								results.add(filter);
-					if (args[0].equalsIgnoreCase("create"))
+					if (args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("changemob"))
 						for (String filter : MobsList.toList())
-							if (filter.toLowerCase().startsWith(args[1].toLowerCase()))
+							if (filter.toLowerCase().startsWith(args[1].toLowerCase())
+									&& player.hasPermission("silkyspawner.command.create." + filter))
 								results.add(filter);
 					if (args[0].equalsIgnoreCase("remove"))
 						for (String filter : nSuggestion)
@@ -134,7 +137,6 @@ public class CommandsManager extends Storage implements CommandExecutor, TabComp
 							if (filter.toLowerCase().startsWith(args[2].toLowerCase()))
 								results.add(filter);
 					if (args[0].equalsIgnoreCase("lore") && !args[1].equalsIgnoreCase("add") && LoreCommand.command.contains(args[1].toLowerCase())) {
-						Player player = (Player) sender;
 						ItemStack item = player.getInventory().getItemInMainHand();
 						if (item.getType().equals(Material.SPAWNER) && item.getItemMeta().hasLore()) {
 							List<Integer> lore = new ArrayList<>();
@@ -172,5 +174,5 @@ abstract class CommandsAbstractClass extends Storage
 		return "command." + getName();
 	}
 	
-	protected final String cmdNode = "command.*";
+	protected final static String cmdNode = "command.*";
 }

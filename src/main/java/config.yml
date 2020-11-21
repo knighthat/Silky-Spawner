@@ -5,7 +5,7 @@
 # Please, DO NOT change anything in version section #
 #                                                   #
 #####################################################
-version: 0.3.3
+version: 0.4.0
 auto-check: true
 
 
@@ -92,3 +92,11 @@ CommandsAssistant:
     Usage: "/silkyspawner gui"
     Description: "Open GUI instead of using commands"
     Permission: silkyspawner.command.gui
+  changemob:
+    Usage: "/silkyspawner changemob [Mob Type]"
+    Description: "Change spawned type of a spawner"
+    Permission: silkyspawner.command.changemob.[mob name]
+  status:
+    Usage: "/silkyspawner status <look/hand>"
+    Description: "Get spawner's status "
+    Permission: silkyspawner.command.status
